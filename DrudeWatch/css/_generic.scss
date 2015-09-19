@@ -1,0 +1,35 @@
+/**
+ * Generic styles
+ */
+
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+}
+
+.unselectable {
+  -webkit-user-select: none;
+}
+
+.no-outline {
+  outline-style: none;
+}
+
+.-pointer {
+  cursor: pointer;
+}
+
+.-progress {
+  cursor: progress;
+}
+
+.-inline {
+  display: inline;
+}
+
+.-none {
+  display: none;
+}
+
+.-block {
+  display: block;
+}
