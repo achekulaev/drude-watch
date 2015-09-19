@@ -4,7 +4,8 @@ var gui = require('nw.gui')
   , pty = require('pty.js')
   , termjs = require('term.js')
   , io = require('socket.io')
-  , express = require('express');
+  , express = require('express')
+  , virtualbox = require('virtualbox');
 
 var mb = new gui.Menu({ type : "menubar" });
 

@@ -14,34 +14,44 @@
   <title>Window title</title>
 </head>
 <body>
+  <script>
+    virtualbox.list(function list_callback(machines, error) {
+      if (error) throw error;
+      Object.keys(machines).forEach(function(id) {
+        var machine = machines[id];
+        console.log('{0} - {1}'.format(machine.name, machine.running));
+      });
+    });
+  </script>
+
   <div id="terminal"></div>
   <script>
-    var terminal, term;
-    var readonly = false;
-    //backend
-    term = pty.spawn('bash', [], {
-      name: 'xterm-color',
-      cols: 155,
-      rows: 46,
-      cwd: process.env.HOME,
-      env: process.env
-    });
-
-    //frontend
-    terminal = new termjs.Terminal({
-      useStyle: true,
-      visualBell: true,
-      geometry: [155, 46]
-    });
-
-    terminal.on('data', function(data) {
-      if (readonly) return;
-      term.write(data);
-    });
-
-    term.on('data', function(data) {
-      terminal.write(data);
-    });
+//    var terminal, term;
+//    var readonly = false;
+//    //backend
+//    term = pty.spawn('bash', [], {
+//      name: 'xterm-color',
+//      cols: 155,
+//      rows: 46,
+//      cwd: process.env.HOME,
+//      env: process.env
+//    });
+//
+//    //frontend
+//    terminal = new termjs.Terminal({
+//      useStyle: true,
+//      visualBell: true,
+//      geometry: [155, 46]
+//    });
+//
+//    terminal.on('data', function(data) {
+//      if (readonly) return;
+//      term.write(data);
+//    });
+//
+//    term.on('data', function(data) {
+//      terminal.write(data);
+//    });
 
     //initiate frontend
 //    terminal.open(document.getElementById('terminal'));
