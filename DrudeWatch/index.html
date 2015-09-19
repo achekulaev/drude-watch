@@ -3,18 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <!-- css -->
-  <link rel="stylesheet" href="css/normalize.css">
   <link type="text/css" rel="stylesheet" href="js/libs/bootstrap/css/bootstrap.min.css" />
   <link type="text/css" rel="stylesheet" href="css/app.css" />
   <!-- scripts -->
   <script src="js/libs/jquery/jquery-2.1.4.min.js"></script>
   <script src="js/libs/bootstrap/js/bootstrap.min.js"></script>
   <script src="js/String.prototype.js"></script> <!-- printf -->
-  <!--script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
+  <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
   <!-- title -->
   <title>Window title</title>
 </head>
 <body>
+  <div id="terminal"></div>
+  <script>
+    var terminal, term;
+    var readonly = false;
+    //backend
+    term = pty.spawn('bash', [], {
+      name: 'xterm-color',
+      cols: 155,
+      rows: 46,
+      cwd: process.env.HOME,
+      env: process.env
+    });
+
+    //frontend
+    terminal = new termjs.Terminal({
+      useStyle: true,
+      visualBell: true,
+      geometry: [155, 46]
+    });
+
+    terminal.on('data', function(data) {
+      if (readonly) return;
+      term.write(data);
+    });
+
+    term.on('data', function(data) {
+      terminal.write(data);
+    });
+
+    //initiate frontend
+//    terminal.open(document.getElementById('terminal'));
+  </script>
+
+
   <script type="text/x-handlebars">
     <h2>Welcome to Ember.js</h2>
 

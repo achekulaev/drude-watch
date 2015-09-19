@@ -1,6 +1,10 @@
 var gui = require('nw.gui')
   , fs = require('fs')
-  , win = gui.Window.get(); //open file with default app
+  , win = gui.Window.get()
+  , pty = require('pty.js')
+  , termjs = require('term.js')
+  , io = require('socket.io')
+  , express = require('express');
 
 var mb = new gui.Menu({ type : "menubar" });
 
