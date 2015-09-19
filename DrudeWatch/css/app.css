@@ -1,0 +1,56 @@
+body {
+  background: #f5f5f5;
+}
+
+/* Generic */
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+}
+
+.unselectable {
+  -webkit-user-select: none;
+}
+
+.no-outline {
+  outline-style: none;
+}
+
+.-pointer {
+  cursor: pointer;
+}
+
+.-progress {
+  cursor: progress;
+}
+
+.-inline {
+  display: inline;
+}
+
+.-none {
+  display: none;
+}
+
+.-block {
+  display: block;
+}
+
+/* -- Spinner -- */
+
+.glyphicon.spinning {
+  -webkit-animation: spin2 1.5s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg);}
+  to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+  from { -webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(360deg);}
+}
+
+.spinning {
+  -webkit-font-smoothing: subpixel-antialiased; /* looks better */
+}

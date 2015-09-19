@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- css -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link type="text/css" rel="stylesheet" href="js/libs/bootstrap/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="css/app.css" />
+  <!-- scripts -->
+  <script src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+  <script src="js/libs/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/String.prototype.js"></script> <!-- printf -->
+  <!--script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
+  <!-- title -->
+  <title>Window title</title>
+</head>
+<body>
+  <script type="text/x-handlebars">
+    <h2>Welcome to Ember.js</h2>
+
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" id="index">
+    <ul>
+    {{#each model as |item|}}
+      <li>{{item}}</li>
+    {{/each}}
+    </ul>
+  </script>
+
+  <script src="js/libs/ember-template-compiler-2.0.1.js"></script>
+  <script src="js/libs/ember-2.0.1.debug.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

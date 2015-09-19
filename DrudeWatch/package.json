@@ -1,0 +1,21 @@
+{
+  "name": "Application-change-me-every-time",
+  "main": "index.html",
+  "description": "Description",
+  "version": "0.0.1",
+  "window": {
+    "title": "Window Title",
+    "icon": "link.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 1024,
+    "height": 768,
+    "position": "mouse",
+    "min_width": 800,
+    "min_height": 600,
+    "max_width": 1600,
+    "max_height": 1200,
+    "single-instance": true,
+    "show": false
+  }
+}
