@@ -15,6 +15,7 @@
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
+  <script src="js/angular/services/vbox.js"></script>
   <!-- scripts -->
   <script src="js/String.prototype.js"></script> <!-- printf -->
   <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
@@ -66,8 +67,11 @@
   </script>
 
 
-  <div ng-controller="index">{{test}}</div>
-  <h1>Drude</h1>
+  <div ng-controller="index">
+    <div ng-repeat="vm in vms">
+      {{vm.name}} - {{vm.running ? 'running' : 'not running'}}
+    </div>
+  </div>
 
 </body>
 </html>
