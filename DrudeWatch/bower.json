@@ -1,0 +1,9 @@
+{
+    "name": "DrudeWatch",
+    "dependencies": {
+        "angular": "1.4.6",
+        "angular-route": "1.4.6",
+        "angular-aria": "1.4.6",
+        "angular-animate": "1.4.6"
+    }
+}
