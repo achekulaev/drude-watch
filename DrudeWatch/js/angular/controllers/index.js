@@ -1,5 +1,8 @@
-Controllers.controller('index', ['$scope', '$vbox', '$docker',
-function($scope, $vbox, $docker) {
+angular
+  .module('dw')
+  .controller('IndexController', IndexController);
+
+function IndexController($scope, $vbox, $docker) {
   $scope.$vbox = $vbox;
   $scope.$docker = $docker;
   $scope.$storage = {
@@ -15,10 +18,13 @@ function($scope, $vbox, $docker) {
   $scope.$vbox.getList();
   $scope.$docker.listContainers();
 
+  /**
+   * React on services updates that happen in anonymous functions
+   */
   $scope.$on('scopeApply', function (e, service) {
     if (['$docker', '$vbox'].indexOf(service) != -1) {
       $scope.$apply();
     }
   });
 
-}]);
+}

@@ -1,4 +1,8 @@
-Controllers.factory('$docker', function($rootScope) {
+angular
+  .module('dw')
+  .factory('$docker', $docker);
+
+function $docker($rootScope) {
   var $instance = { containers: [] };
 
   $instance.listContainers = function() {
@@ -10,4 +14,4 @@ Controllers.factory('$docker', function($rootScope) {
   };
 
   return $instance;
-});
+}

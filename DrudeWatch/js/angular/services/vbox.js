@@ -1,4 +1,8 @@
-Controllers.factory('$vbox', function($rootScope) {
+angular
+  .module('dw')
+  .factory('$vbox', $vbox);
+
+function $vbox($rootScope) {
   var $instance = { list: [{ name: 'Loading...', running: true }] };
 
   /**
@@ -30,4 +34,4 @@ Controllers.factory('$vbox', function($rootScope) {
 
   return $instance;
 
-});
+}
