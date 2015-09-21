@@ -39,12 +39,20 @@
 //    var readonly = false;
 //    //backend
 //    term = pty.spawn('bash', [], {
-//      name: 'xterm-color',
+//      name: 'vt220',
 //      cols: 155,
 //      rows: 46,
 //      cwd: process.env.HOME,
 //      env: process.env
 //    });
+//
+//    /*term.on('data', function(data) {
+//      console.log(data);
+//    });
+//
+//    term.write('ls\r');
+//    term.write('echo $?\r');*/
+
 //
 //    //frontend
 //    terminal = new termjs.Terminal({
