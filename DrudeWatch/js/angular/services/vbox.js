@@ -5,12 +5,10 @@ angular
   .factory('$vbox', $vbox);
 
 function $vbox($rootScope) {
-  var $instance = {
-    list: [{ name: 'Loading...', running: true }],
-    refresh: getList
+  return {
+    list: list,
+    info: info
   };
-  getList();
-  return $instance;
 
   /////////
 
@@ -18,26 +16,43 @@ function $vbox($rootScope) {
    * Gets array of VMs:
    *   [ { id: int, name: string, running: bool }, ... ]
    */
-  function getList() {
+  function list(callback) {
     virtualbox.list(function list_callback(machines, error) {
       if (error) {
-        //TODO: handle it
+        callback(error);
         return;
       }
 
       var list = [];
-      angular.forEach(machines, function(machine) {
-        if (machine.name.toString().match(/boot2docker/)) {
-          list.push({
-            id: machine.id,
-            name: machine.name,
-            running: machine.running
-          });
-        }
+      angular.forEach(machines, function(machine, id) {
+        list.push({
+          id: id,
+          name: machine.name,
+          running: machine.running
+        });
       });
 
-      $instance.list = list;
-      $rootScope.$broadcast('scopeApply', '$vbox');
+      callback(null, list);
+    });
+  }
+
+  /**
+   * Get info for VM by id
+   * @param id int
+   * @param callback function
+   */
+  function info(id, callback) {
+    list(function(err, machines) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      angular.forEach(machines, function(machine) {
+        if (machine.id == id) {
+          callback(null, machine);
+        }
+      });
     });
   }
 

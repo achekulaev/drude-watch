@@ -17,6 +17,7 @@
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
   <script src="js/angular/services/vbox.js"></script>
+  <script src="js/angular/services/vagrant.js"></script>
   <script src="js/angular/services/docker.js"></script>
   <script src="js/angular/services/yaml.js"></script>
   <!-- scripts -->
@@ -71,15 +72,15 @@
   <div ng-controller="IndexController as app">
 
     <!-- Docker status -->
-    <div ng-repeat="vm in app.vbox.list">
-      {{vm.name}} - {{vm.running ? 'running' : 'not running'}}
+    <div>
+      Docker - {{app.session.vagrant.vm.running ? 'running' : 'not running'}}
     </div>
 
     <!-- Projects -->
-    <div ng-if="!isEmpty(project.containers)" ng-repeat="project in app.config.projects">
+    <div ng-repeat="project in app.config.projects">
       <b>{{project.name}}</b>
       <div ng-repeat="(name, data) in project.containers">
-        {{name}} - ({{isEmpty(data.$instance) ? 'stopped' : 'running'}})
+        {{name}} - ({{data.$instance ? 'running' : 'stopped'}})
       </div>
     </div>
 

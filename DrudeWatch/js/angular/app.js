@@ -1,2 +1,3 @@
 angular
-  .module('dw', ['ngRoute', 'ngStorage']);
+  .module('dw', ['ngRoute', 'ngStorage'])
+  .value('vname', 'boot2docker'); // see config.vm.define in Vagrantfile
