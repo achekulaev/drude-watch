@@ -5,9 +5,10 @@ angular
   .controller('IndexController', IndexController);
 
 function IndexController($scope, $vbox, $docker) {
-  $scope.vbox = $vbox;
-  $scope.docker = $docker;
-  $scope.storage = {
+  var ctrl = this;
+  ctrl.vbox = $vbox;
+  ctrl.docker = $docker;
+  ctrl.storage = {
     projects: {
       id: 1,
       path: '/Users/alexei.chekulaev/Sites/wholefoods',
@@ -17,8 +18,8 @@ function IndexController($scope, $vbox, $docker) {
     }
   };
 
-  $scope.vbox.getList();
-  $scope.docker.listContainers();
+  ctrl.vbox.getList();
+  ctrl.docker.listContainers();
 
   /**
    * React on services updates that happen in anonymous functions
