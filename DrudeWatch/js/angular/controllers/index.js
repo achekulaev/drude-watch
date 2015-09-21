@@ -8,12 +8,12 @@ function IndexController($scope, $vbox, $docker, $yaml, $localStorage) {
   var ctrl = this;
   ctrl.vbox = $vbox;
   initConfig();
-  getStatus();
+  drudeWatch();
 
   ////////////
 
   function initConfig() {
-    $localStorage.$reset();
+    //$localStorage.$reset();
     // For docs see: https://github.com/gsklee/ngStorage
     // Initialize with default values if empty
     ctrl.config = $localStorage.$default({
@@ -34,7 +34,7 @@ function IndexController($scope, $vbox, $docker, $yaml, $localStorage) {
     });
   }
 
-  function getStatus() {
+  function drudeWatch() {
     $docker.listContainers(ctrl.config.docker, function (err, containers) {
       if (err) {
         console.log('Could not connect to Docker with: ');
@@ -85,7 +85,7 @@ function IndexController($scope, $vbox, $docker, $yaml, $localStorage) {
      * @param containers
      */
     function labelContainers(containers) {
-      ////
+      //TODO assign labels to old containers that only have names
     }
   }
 
