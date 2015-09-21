@@ -18,9 +18,6 @@ function IndexController($scope, $vbox, $docker) {
     }
   };
 
-  ctrl.vbox.getList();
-  ctrl.docker.listContainers();
-
   /**
    * React on services updates that happen in anonymous functions
    */
