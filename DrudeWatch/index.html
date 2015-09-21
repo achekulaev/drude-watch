@@ -16,6 +16,7 @@
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
   <script src="js/angular/services/vbox.js"></script>
+  <script src="js/angular/services/docker.js"></script>
   <!-- scripts -->
   <script src="js/String.prototype.js"></script> <!-- printf -->
   <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
@@ -23,15 +24,6 @@
   <title>Window title</title>
 </head>
 <body>
-  <script>
-//    virtualbox.list(function list_callback(machines, error) {
-//      if (error) throw error;
-//      Object.keys(machines).forEach(function(id) {
-//        var machine = machines[id];
-//        console.log('{0} - {1}'.format(machine.name, machine.running));
-//      });
-//    });
-  </script>
 
   <div id="terminal"></div>
   <script>
@@ -83,9 +75,21 @@
 //    });
   </script>
 
+  <script>
+    try {
+      var doc = yaml.safeLoad(fs.readFileSync('/Users/alexei.chekulaev/Sites/wholefoods/docker-compose.yml', 'utf8'));
+      console.log(doc);
+    } catch (e) {
+      console.log(e);
+    }
+  </script>
+
   <div ng-controller="index">
-    <div ng-repeat="vm in vms">
+    <div ng-repeat="vm in $vbox.list">
       {{vm.name}} - {{vm.running ? 'running' : 'not running'}}
+    </div>
+    <div ng-repeat="container in $docker.containers">
+      {{container.Image}}
     </div>
   </div>
 

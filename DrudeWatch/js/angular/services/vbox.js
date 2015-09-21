@@ -1,4 +1,4 @@
-Controllers.factory('$vbox', function() {
+Controllers.factory('$vbox', function($rootScope) {
   var $instance = { list: [{ name: 'Loading...', running: true }] };
 
   /**
@@ -14,15 +14,17 @@ Controllers.factory('$vbox', function() {
       var list = [];
       Object.keys(machines).forEach(function(id) {
         var machine = machines[id];
-        list.push({
-          id: id,
-          name: machine.name,
-          running: machine.running
-        });
+        if (machine.name.toString().match(/boot2docker/)) {
+          list.push({
+            id: id,
+            name: machine.name,
+            running: machine.running
+          });
+        }
       });
       $instance.list = list;
-      //console.log($instance.list);
-      callback();
+
+      $rootScope.$broadcast('scopeApply', '$vbox');
     });
   };
 
