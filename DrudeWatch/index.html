@@ -84,11 +84,11 @@
     }
   </script>
 
-  <div ng-controller="IndexController">
-    <div ng-repeat="vm in $vbox.list">
+  <div ng-controller="IndexController as app">
+    <div ng-repeat="vm in app.vbox.list">
       {{vm.name}} - {{vm.running ? 'running' : 'not running'}}
     </div>
-    <div ng-repeat="container in $docker.containers">
+    <div ng-repeat="container in app.docker.containers">
       {{container.Image}}
     </div>
   </div>
