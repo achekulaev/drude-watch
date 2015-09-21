@@ -13,10 +13,12 @@
   <script src="bower_components/angular-route/angular-route.min.js"></script>
   <script src="bower_components/angular-aria/angular-aria.min.js"></script>
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.min.js"></script>
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
   <script src="js/angular/services/vbox.js"></script>
   <script src="js/angular/services/docker.js"></script>
+  <script src="js/angular/services/yaml.js"></script>
   <!-- scripts -->
   <script src="js/String.prototype.js"></script> <!-- printf -->
   <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
@@ -66,22 +68,21 @@
 //    terminal.open(document.getElementById('terminal'));
   </script>
 
-  <script>
-    try {
-      var doc = yaml.safeLoad(fs.readFileSync('/Users/alexei.chekulaev/Sites/wholefoods/docker-compose.yml', 'utf8'));
-      console.log(doc);
-    } catch (e) {
-      console.log(e);
-    }
-  </script>
-
   <div ng-controller="IndexController as app">
+
+    <!-- Docker status -->
     <div ng-repeat="vm in app.vbox.list">
       {{vm.name}} - {{vm.running ? 'running' : 'not running'}}
     </div>
-    <div ng-repeat="container in app.docker.containers">
-      {{container.Image}}
+
+    <!-- Projects -->
+    <div ng-if="!isEmpty(project.containers)" ng-repeat="project in app.config.projects">
+      <b>{{project.name}}</b>
+      <div ng-repeat="(name, data) in project.containers">
+        {{name}} - ({{isEmpty(data.$instance) ? 'stopped' : 'running'}})
+      </div>
     </div>
+
   </div>
 
 </body>

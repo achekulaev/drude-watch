@@ -1,2 +1,2 @@
 angular
-  .module('dw', ['ngRoute']);
+  .module('dw', ['ngRoute', 'ngStorage']);

@@ -1,10 +1,10 @@
 {
-  "name": "Application-change-me-every-time",
+  "name": "Drude Watch",
   "main": "index.html",
   "description": "Description",
   "version": "0.0.1",
   "window": {
-    "title": "Window Title",
+    "title": "Drude Watch",
     "icon": "link.png",
     "toolbar": true,
     "frame": true,
