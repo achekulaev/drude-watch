@@ -5,7 +5,8 @@ var gui = require('nw.gui')
   , termjs = require('term.js')
   , io = require('socket.io')
   , express = require('express')
-  , virtualbox = require('virtualbox');
+  , virtualbox = require('virtualbox')
+  , Docker = require('dockerode');
 
 var mb = new gui.Menu({ type : "menubar" });
 
