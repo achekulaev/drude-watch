@@ -1,3 +1,5 @@
+(function() {
+
 angular
   .module('dw')
   .factory('$docker', $docker);
@@ -15,3 +17,5 @@ function $docker($rootScope) {
 
   return $instance;
 }
+
+})();

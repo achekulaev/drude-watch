@@ -1,3 +1,5 @@
+(function() {
+
 angular
   .module('dw')
   .controller('IndexController', IndexController);
@@ -28,3 +30,5 @@ function IndexController($scope, $vbox, $docker) {
   });
 
 }
+
+})();

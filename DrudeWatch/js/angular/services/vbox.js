@@ -1,3 +1,5 @@
+(function() {
+
 angular
   .module('dw')
   .factory('$vbox', $vbox);
@@ -35,3 +37,5 @@ function $vbox($rootScope) {
   return $instance;
 
 }
+
+})();
