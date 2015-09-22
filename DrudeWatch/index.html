@@ -16,10 +16,12 @@
   <script src="bower_components/ngstorage/ngStorage.min.js"></script>
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
+  <script src="js/angular/controllers/messages.js"></script>
   <script src="js/angular/services/vbox.js"></script>
   <script src="js/angular/services/vagrant.js"></script>
   <script src="js/angular/services/docker.js"></script>
   <script src="js/angular/services/yaml.js"></script>
+  <script src="js/angular/services/drude.js"></script>
   <!-- scripts -->
   <script src="js/String.prototype.js"></script> <!-- printf -->
   <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
@@ -70,7 +72,16 @@
   </script>
 
   <div ng-controller="IndexController as app">
+    <input style="display:none;" id="fileDialog" type="file" nwdirectory nwworkingdir="{{app.config.vagrant.path}}" accept=".yml" />
 
+    <div ng-controller="MessagesController as messages">
+      <div ng-repeat="(index, message) in messages.list">
+        <div style="border: 1px solid red">
+          {{message.type}} - {{message.text}}
+          <button ng-click="release(index)">X</button>
+        </div>
+      </div>
+    </div>
     <!-- Docker status -->
     <div>
       Docker - {{app.session.vagrant.vm.running ? 'running' : 'not running'}}
@@ -83,6 +94,8 @@
         {{name}} - ({{data.$instance ? 'running' : 'stopped'}})
       </div>
     </div>
+
+    <button class="btn btn-default" ng-click="app.addProject('#fileDialog')">Add project</button>
 
   </div>
 

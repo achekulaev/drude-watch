@@ -4,20 +4,35 @@ angular
   .module('dw')
   .controller('IndexController', IndexController);
 
-function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml) {
+function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude) {
   var ctrl = this;
   initConfig();
   //drudeWatch();
   $interval(drudeWatch, 1000);
 
   ////////////
+  this.addProject = function(fieldId) {
+    var chooser = document.querySelector(fieldId);
+    chooser.addEventListener('change', function(e) {
+      if (this.value != '') {
+        $drude.newProject(this.value, function(err, project) {
+          if (err) {
+            console.error(err.msg);
+          }
+          console.log(project);
+          //angular.merge(ctrl.config.projects, project);
+        });
+      }
+    }, false);
+    chooser.click();
+  };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
     $localStorage.$reset();
     // Persistent config
     ctrl.config = $localStorage.$default({
       vagrant: {
-        path: '/Users/alexei.chekulaev/Sites',
+        path: '/Users/alexei.chekulaev/Sites'
       },
       docker: {
         host: 'http://127.0.0.1',
@@ -71,8 +86,8 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       // parseYml returns Object: { cli: {}, web: {}, db: {} }
       var config = ctrl.config;
       angular.forEach(ctrl.config.projects, function(p) {
-        p.containers = $yaml.parseYml('{0}/{1}/docker-compose.yml'.format(config.vagrant.path, p.path));
-        p.containers = matchContainers(p.path, p.containers, containers);
+        var p_containers = $yaml.parseYml('{0}/{1}/docker-compose.yml'.format(config.vagrant.path, p.path));
+        p.containers = matchContainers(p.path, p_containers, containers);
       });
 
       if (containers.length !== 0) {

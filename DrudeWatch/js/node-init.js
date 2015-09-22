@@ -1,5 +1,6 @@
 var gui = require('nw.gui')
   , fs = require('fs')
+  , path = require('path')
   , win = gui.Window.get()
   , pty = require('pty.js')
   , termjs = require('term.js')
