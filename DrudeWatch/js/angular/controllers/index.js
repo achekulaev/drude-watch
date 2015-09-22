@@ -7,23 +7,40 @@ angular
 function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages) {
   var ctrl = this;
   initConfig();
-  //drudeWatch();
   $interval(drudeWatch, 1000);
 
-  ////////////
+  //------------------
+
   this.addProject = function(fieldId) {
     var chooser = document.querySelector(fieldId);
     chooser.addEventListener('change', function(e) {
-      if (this.value != '') {
-        $drude.newProject(this.value, function(err, project) {
+      if (this.value == '') return;
+
+      $drude.validateProject(this.value,
+        function createProject(err, project) {
           if (err) {
             $messages.error(err.msg);
+            return;
           }
-          console.log(project);
-          //angular.merge(ctrl.config.projects, project);
-        });
-      }
+
+          var exists = false;
+          angular.forEach(ctrl.config.projects, function (_project) {
+            if (_project.path == project.path) {
+              $messages.error('Project {0} already exists'.format(project.path));
+              exists = true;
+            }
+          });
+          if (exists) return;
+
+          var newProject = {};
+          newProject[project.path] = project;
+          angular.merge(ctrl.config.projects, newProject);
+          console.log(ctrl.config.projects);
+        }
+      );
+
     }, false);
+
     chooser.click();
   };
 
@@ -41,7 +58,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
         //socketPath: '/var/run/docker.sock'
       },
       projects: {
-        1: {
+        wholefoods: {
           name: 'wholefoods',
           path: 'wholefoods',
           containers: {}
@@ -131,15 +148,6 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       //TODO assign labels to old containers that only have names
     }
   }
-
-  /**
-   * React on services updates that happen in anonymous functions
-   */
-  $scope.$on('scopeApply', function (e, service) {
-    if (['$docker', '$vbox'].indexOf(service) != -1) {
-      $scope.$apply();
-    }
-  });
 
 }
 
