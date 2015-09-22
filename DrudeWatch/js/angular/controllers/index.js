@@ -9,6 +9,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   ctrl.projectChooser = document.querySelector('#fileDialog');
   initConfig();
   initChooser();
+  initTerminal();
   $interval(drudeWatch, 1000);
 
   //------------------
@@ -45,6 +46,43 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       }
     }
     );
+  }
+
+  function initTerminal() {
+    var cols = 115,
+        rows = 43;
+    var terminal, term;
+    var readonly = false;
+    //backend
+    term = pty.spawn('bash', [], {
+      name: 'xterm',
+      cols: cols,
+      rows: rows,
+      cwd: process.env.HOME,
+      env: process.env
+    });
+
+    //frontend
+    terminal = new termjs.Terminal({
+      useStyle: true,
+      visualBell: true,
+      geometry: [cols, rows]
+    });
+
+    terminal.on('data', function(data) {
+      if (readonly) return;
+      term.write(data);
+    });
+
+    term.on('data', function(data) {
+      terminal.write(data);
+    });
+
+    //initiate frontend
+    terminal.open(document.getElementById('terminal'));
+    setTimeout(term.write('cd '+
+      ctrl.config.vagrant.path+'/'+
+      ctrl.config.projects.wholefoods.path+'\r'), 1000);
   }
 
   function drudeWatch() {
@@ -126,7 +164,6 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     var chooser = ctrl.projectChooser;
     chooser.addEventListener('change', function(e) {
       if (this.value == '') return;
-      console.log('fire');
       $drude.validateProject(this.value,
         function createProject(err, project) {
           if (err) {

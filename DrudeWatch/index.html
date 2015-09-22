@@ -30,48 +30,6 @@
   <title>Drude Watch</title>
 </head>
 <body>
-
-  <div id="terminal"></div>
-  <script>
-//    var terminal, term;
-//    var readonly = false;
-//    //backend
-//    term = pty.spawn('bash', [], {
-//      name: 'vt220',
-//      cols: 155,
-//      rows: 46,
-//      cwd: process.env.HOME,
-//      env: process.env
-//    });
-//
-//    /*term.on('data', function(data) {
-//      console.log(data);
-//    });
-//
-//    term.write('ls\r');
-//    term.write('echo $?\r');*/
-
-//
-//    //frontend
-//    terminal = new termjs.Terminal({
-//      useStyle: true,
-//      visualBell: true,
-//      geometry: [155, 46]
-//    });
-//
-//    terminal.on('data', function(data) {
-//      if (readonly) return;
-//      term.write(data);
-//    });
-//
-//    term.on('data', function(data) {
-//      terminal.write(data);
-//    });
-
-    //initiate frontend
-//    terminal.open(document.getElementById('terminal'));
-  </script>
-
   <script type="text/ng-template" id="message.html">
     <div class="alert alert-{{message.type}}">{{message.text}}<button ng-click="messages.release(index)">X</button></div>
   </script>
@@ -82,26 +40,34 @@
     <div ng-controller="MessagesController as messages">
       <div ng-repeat="(index, message) in messages.list">
         <div ng-include src="'message.html'">123</div>
-        <!--<div style="border: 1px solid red">-->
-          <!--{{message.type}} - {{message.text}}-->
-          <!--<button ng-click="messages.release(index)">X</button>-->
-        <!--</div>-->
       </div>
     </div>
-    <!-- Docker status -->
-    <div>
-      Docker - {{app.session.vagrant.vm.running ? 'running' : 'not running'}}
-    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <!-- Docker status -->
+        <div>
+          Docker - {{app.session.vagrant.vm.running ? 'running' : 'not running'}}
+        </div>
 
-    <!-- Projects -->
-    <div ng-repeat="project in app.config.projects">
-      <b>{{project.name}}</b>
-      <div ng-repeat="(name, data) in project.containers">
-        {{name}} - ({{data.$instance ? 'running' : 'stopped'}})
+        <!-- Projects -->
+        <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
+
+        <div ng-repeat="project in app.config.projects">
+          <b>{{project.name}}</b>
+          <div ng-repeat="(name, data) in project.containers">
+            {{name}} - ({{data.$instance ? 'running' : 'stopped'}})
+          </div>
+        </div>
+
+        <button class="btn btn-default" ng-click="app.addProject()">Add project</button>
+      </div>
+      <div class="col-md-10">
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="home">Home</div>
+          <div role="tabpanel" class="tab-pane" id="profile"><div id="terminal"></div></div>
+        </div>
       </div>
     </div>
-
-    <button class="btn btn-default" ng-click="app.addProject()">Add project</button>
 
   </div>
 
