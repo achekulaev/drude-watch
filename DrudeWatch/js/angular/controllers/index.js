@@ -6,42 +6,15 @@ angular
 
 function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages) {
   var ctrl = this;
+  ctrl.projectChooser = document.querySelector('#fileDialog');
   initConfig();
+  initChooser();
   $interval(drudeWatch, 1000);
 
   //------------------
 
-  this.addProject = function(fieldId) {
-    var chooser = document.querySelector(fieldId);
-    chooser.addEventListener('change', function(e) {
-      if (this.value == '') return;
-
-      $drude.validateProject(this.value,
-        function createProject(err, project) {
-          if (err) {
-            $messages.error(err.msg);
-            return;
-          }
-
-          var exists = false;
-          angular.forEach(ctrl.config.projects, function (_project) {
-            if (_project.path == project.path) {
-              $messages.error('Project {0} already exists'.format(project.path));
-              exists = true;
-            }
-          });
-          if (exists) return;
-
-          var newProject = {};
-          newProject[project.path] = project;
-          angular.merge(ctrl.config.projects, newProject);
-          console.log(ctrl.config.projects);
-        }
-      );
-
-    }, false);
-
-    chooser.click();
+  this.addProject = function() {
+    ctrl.projectChooser.click();
   };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
@@ -147,6 +120,41 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     function labelContainers(containers) {
       //TODO assign labels to old containers that only have names
     }
+  }
+
+  function initChooser() {
+    var chooser = ctrl.projectChooser;
+    chooser.addEventListener('change', function(e) {
+      if (this.value == '') return;
+      console.log('fire');
+      $drude.validateProject(this.value,
+        function createProject(err, project) {
+          if (err) {
+            $messages.error(err.msg);
+            chooser.value = '';
+            return;
+          }
+
+          var exists = false;
+          angular.forEach(ctrl.config.projects, function (_project) {
+            if (!exists && _project.path == project.path) {
+              $messages.error('Project {0} already exists'.format(project.path));
+              exists = true;
+            }
+          });
+          if (exists) {
+            chooser.value = '';
+            return;
+          }
+
+          var newProject = {};
+          newProject[project.path] = project;
+          angular.merge(ctrl.config.projects, newProject);
+          console.log(ctrl.config.projects);
+        }
+      );
+
+    }, false);
   }
 
 }

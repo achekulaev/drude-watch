@@ -20,7 +20,7 @@ function $messages ($rootScope) {
   }
 
   function error(text) {
-    broadcast('error', text);
+    broadcast('danger', text);
   }
 
   function broadcast(type, text) {

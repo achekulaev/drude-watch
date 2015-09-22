@@ -27,7 +27,7 @@
   <script src="js/String.prototype.js"></script> <!-- printf -->
   <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
   <!-- title -->
-  <title>Window title</title>
+  <title>Drude Watch</title>
 </head>
 <body>
 
@@ -72,15 +72,20 @@
 //    terminal.open(document.getElementById('terminal'));
   </script>
 
+  <script type="text/ng-template" id="message.html">
+    <div class="alert alert-{{message.type}}">{{message.text}}<button ng-click="messages.release(index)">X</button></div>
+  </script>
+
   <div ng-controller="IndexController as app">
     <input style="display:none;" id="fileDialog" type="file" nwdirectory nwworkingdir="{{app.config.vagrant.path}}" accept=".yml" />
 
     <div ng-controller="MessagesController as messages">
       <div ng-repeat="(index, message) in messages.list">
-        <div style="border: 1px solid red">
-          {{message.type}} - {{message.text}}
-          <button ng-click="messages.release(index)">X</button>
-        </div>
+        <div ng-include src="'message.html'">123</div>
+        <!--<div style="border: 1px solid red">-->
+          <!--{{message.type}} - {{message.text}}-->
+          <!--<button ng-click="messages.release(index)">X</button>-->
+        <!--</div>-->
       </div>
     </div>
     <!-- Docker status -->
@@ -96,7 +101,7 @@
       </div>
     </div>
 
-    <button class="btn btn-default" ng-click="app.addProject('#fileDialog')">Add project</button>
+    <button class="btn btn-default" ng-click="app.addProject()">Add project</button>
 
   </div>
 
