@@ -17,6 +17,7 @@
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
   <script src="js/angular/controllers/messages.js"></script>
+  <script src="js/angular/services/messages.js"></script>
   <script src="js/angular/services/vbox.js"></script>
   <script src="js/angular/services/vagrant.js"></script>
   <script src="js/angular/services/docker.js"></script>
@@ -78,7 +79,7 @@
       <div ng-repeat="(index, message) in messages.list">
         <div style="border: 1px solid red">
           {{message.type}} - {{message.text}}
-          <button ng-click="release(index)">X</button>
+          <button ng-click="messages.release(index)">X</button>
         </div>
       </div>
     </div>

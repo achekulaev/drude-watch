@@ -4,7 +4,7 @@ angular
   .module('dw')
   .controller('IndexController', IndexController);
 
-function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude) {
+function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages) {
   var ctrl = this;
   initConfig();
   //drudeWatch();
@@ -17,7 +17,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       if (this.value != '') {
         $drude.newProject(this.value, function(err, project) {
           if (err) {
-            console.error(err.msg);
+            $messages.error(err.msg);
           }
           console.log(project);
           //angular.merge(ctrl.config.projects, project);
