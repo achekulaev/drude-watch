@@ -10,7 +10,8 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   initConfig();
   initChooser();
   initTerminal();
-  $interval(drudeWatch, 1000);
+  drudeWatch();
+  $interval(drudeWatch, 10000);
 
   //------------------
 
@@ -19,7 +20,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
-    $localStorage.$reset();
+    //$localStorage.$reset();
     // Persistent config
     ctrl.config = $localStorage.$default({
       vagrant: {
@@ -134,21 +135,24 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
      *   project_dirname + '_' + service_name + '_' + #number
      * This function find matches between config entries and running containers
      */
-    function matchContainers(project_label, config_entries, containers) {
-      angular.forEach(config_entries, function (entry, service_name) {
-        var entry_label = project_label + '_' + service_name; //TODO: account for several same-named entries
+    function matchContainers(project_path, yml_entries, containers) {
+      //console.log(yml_entries);
+      //console.log(containers);
+      angular.forEach(yml_entries, function (entry, service_name) {
+        delete entry.$instance;
+        var entry_label = project_path.replace(/[^\w]/, '') + '_' + service_name; //TODO: account for several same-named entries
         angular.forEach(containers, function(container, index) {
-          delete entry.$instance;
           var labels = container.Labels;
           var container_label = labels['com.docker.compose.project'] + '_' + labels['com.docker.compose.service'];
+          //console.log(container_label, entry_label);
           if (container_label == entry_label) {
-            entry.$instance = container;
-            containers.splice(index, 1);
+            entry.$instance = container; // assign matched container as instance or service
+            containers.splice(index, 1); // remove matched container from list
           }
         });
       });
 
-      return config_entries;
+      return yml_entries;
     }
 
     /**
