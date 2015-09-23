@@ -19,6 +19,12 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     ctrl.projectChooser.click();
   };
 
+  this.tabActivate = function(id) {
+    jQuery('#tabContent').find('div[role=tabpanel]').removeClass('active');
+    jQuery('#tabContent').find('div#'+id+'-terminal').addClass('active');
+    jQuery('#tabContent').find('div#'+id+'-terminal').find('div.terminal').focus();
+  };
+
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
     //$localStorage.$reset();
     // Persistent config
@@ -47,93 +53,61 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       },
       terminals: {}
     });
+    ctrl.terminals = {};
   }
 
   function initTerminal() {
     var tabContent = document.querySelector('#tabContent'),
-        terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}">{1}</div>',
+        terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"></div>',
         cols = 115,
         rows = 43;
 
     angular.forEach(ctrl.config.projects, function(project) {
       // Create div holders for terminals
-      var project_label = project.name.replace(/[^\w]/, ''),
+      var project_label = project.path.replace(/[^\w]/, ''),
           terminal_id = '{0}-terminal'.format(project_label);
-      if (!document.querySelector('#' + terminal_id)) {
-        jQuery(terminalHTML.format(terminal_id, project.name))
+      if (!document.getElementById(terminal_id)) {
+        jQuery(terminalHTML.format(terminal_id))
           .appendTo(tabContent);
       }
 
       //Create terminals
-      if (!isEmpty(ctrl.session.terminals[project.name])) {
+      if (!isEmpty(ctrl.terminals[project.name])) {
         console.warn('Terminal for '+project.name+' already exists');
       }
-      ctrl.session.terminals[project.name] = {};
-      var terminal = ctrl.session.terminals[project.name];
+      ctrl.terminals[project.name] = {};
+      var terminal = ctrl.terminals[project.name];
       terminal.readonly = false;
-      console.log(ctrl.session.terminals);
-      //terminal.backend = pty.spawn('bash', [], {
-      //  name: 'xterm',
-      //  cols: cols,
-      //  rows: rows,
-      //  cwd: process.env.HOME,
-      //  env: process.env
-      //});
-      //terminal.frontend = new termjs.Terminal({
-      //  useStyle: true,
-      //  visualBell: true,
-      //  geometry: [cols, rows]
-      //});
-      //var frontend = terminal.frontend;
-      //var backend = terminal.backend;
-      //frontend.on('data', function(data) {
-      //  if (readonly) return;
-      //  backend.write(data);
-      //});
-      //
-      //backend.on('data', function(data) {
-      //  frontend.write(data);
-      //});
+
+      terminal.backend = pty.spawn('bash', [], {
+        name: 'xterm',
+        cols: cols,
+        rows: rows,
+        cwd: process.env.HOME,
+        env: process.env
+      });
+      terminal.frontend = new termjs.Terminal({
+        useStyle: true,
+        visualBell: true,
+        geometry: [cols, rows]
+      });
+      var frontend = terminal.frontend;
+      var backend = terminal.backend;
+      frontend.on('data', function(data) {
+        if (terminal.readonly) return;
+        backend.write(data);
+      });
+
+      backend.on('data', function(data) {
+        frontend.write(data);
+      });
 
       //initiate frontend
-      //frontend.open('#'+terminal_id);
-      //setTimeout(backend.write('cd '+
-      //  ctrl.config.vagrant.path+'/'+
-      //  project.path+'\r'), 1000);
+      frontend.open(document.getElementById(terminal_id));
+      setTimeout(backend.write('cd '+
+        ctrl.config.vagrant.path+'/'+
+        project.path+'\r'), 1000);
     });
-
-    var terminal, term;
-    var readonly = false;
-    //backend
-    term = pty.spawn('bash', [], {
-      name: 'xterm',
-      cols: cols,
-      rows: rows,
-      cwd: process.env.HOME,
-      env: process.env
-    });
-
-    //frontend
-    terminal = new termjs.Terminal({
-      useStyle: true,
-      visualBell: true,
-      geometry: [cols, rows]
-    });
-
-    terminal.on('data', function(data) {
-      if (readonly) return;
-      term.write(data);
-    });
-
-    term.on('data', function(data) {
-      terminal.write(data);
-    });
-
-    //initiate frontend
-    terminal.open(document.getElementById('terminal'));
-    //setTimeout(term.write('cd '+
-    //  ctrl.config.vagrant.path+'/'+
-    //  ctrl.config.projects.wholefoods.path+'\r'), 1000);
   }
 
   function drudeWatch() {
@@ -165,12 +139,13 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       // parseYml returns Object: { cli: {}, web: {}, db: {} }
       var config = ctrl.config;
       angular.forEach(ctrl.config.projects, function(p) {
+        p.label = p.path.replace(/[^\w]/, ''); //TODO refactor this!!
         var p_containers = $yaml.parseYml('{0}/{1}/docker-compose.yml'.format(config.vagrant.path, p.path));
         p.containers = matchContainers(p.path, p_containers, containers);
       });
 
       if (containers.length !== 0) {
-        //TODO; iterate through containers. Make fake wrappers to display them under 'Unknown'
+        //TODO; iterate through leftover containers. Make fake wrappers to display them under 'Unknown'
         //angular.merge(ctrl.config.projects, {
         //  name: 'Unknown project',
         //    path: 'unknown',

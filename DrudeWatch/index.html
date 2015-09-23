@@ -50,10 +50,8 @@
         </div>
 
         <!-- Projects -->
-        <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
-
         <div ng-repeat="project in app.config.projects">
-          <b>{{project.name}}</b>
+          <a href="#{{project.label}}" ng-click="app.tabActivate(project.label)" role="tab">{{project.name}}</a>
           <div ng-repeat="(name, data) in project.containers">
             {{name}} - ({{data.$instance ? 'running' : 'stopped'}})
           </div>
@@ -63,8 +61,7 @@
       </div>
       <div class="col-md-10">
         <div class="tab-content" id="tabContent">
-          <div role="tabpanel" class="tab-pane active" id="home">Home</div>
-          <div role="tabpanel" class="tab-pane" id="profile"><div id="terminal"></div></div>
+          <div role="tabpanel" class="tab-pane active" id="home">Welcome to Drude Watch, commander.</div>
         </div>
       </div>
     </div>
