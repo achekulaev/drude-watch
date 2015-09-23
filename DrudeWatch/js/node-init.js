@@ -37,15 +37,18 @@ $(window).on('load', function() {
 });
 
 /**
- * Check is value is empty. Deep-checks arrays but not objects (See note!)
- * Note: isEmpty([]) == true, isEmpty({}) == true, isEmpty([{},"",0]) == true, isEmpty({0:""}) == false
+ * Checks if value is empty. Deep-checks arrays and objects
+ * Note: isEmpty([]) == true, isEmpty({}) == true, isEmpty([{0:false},"",0]) == true, isEmpty({0:1}) == false
  * @param value
  * @returns {boolean}
  */
 function isEmpty(value){
   var isEmptyObject = function(a) {
-    if (typeof a.length === 'undefined') { // it's an empty/non-empty Object. Not an Array
-      return Object.keys(a).length === 0;
+    if (typeof a.length === 'undefined') { // it's an Object, not an Array
+      var hasNonempty = Object.keys(a).some(function nonEmpty(element){
+        return !isEmpty(a[element]);
+      });
+      return hasNonempty ? false : isEmptyObject(Object.keys(a));
     }
 
     return !a.some(function nonEmpty(element) { // check if array is really not empty as JS thinks
