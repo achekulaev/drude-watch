@@ -44,14 +44,64 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     ctrl.session = $sessionStorage.$default({
       vagrant: {
         vm : { id: '', name: 'Loading...', running: false }
-      }
-    }
-    );
+      },
+      terminals: {}
+    });
   }
 
   function initTerminal() {
-    var cols = 115,
+    var tabContent = document.querySelector('#tabContent'),
+        terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}">{1}</div>',
+        cols = 115,
         rows = 43;
+
+    angular.forEach(ctrl.config.projects, function(project) {
+      // Create div holders for terminals
+      var project_label = project.name.replace(/[^\w]/, ''),
+          terminal_id = '{0}-terminal'.format(project_label);
+      if (!document.querySelector('#' + terminal_id)) {
+        jQuery(terminalHTML.format(terminal_id, project.name))
+          .appendTo(tabContent);
+      }
+
+      //Create terminals
+      if (!isEmpty(ctrl.session.terminals[project.name])) {
+        console.warn('Terminal for '+project.name+' already exists');
+      }
+      ctrl.session.terminals[project.name] = {};
+      var terminal = ctrl.session.terminals[project.name];
+      terminal.readonly = false;
+      console.log(ctrl.session.terminals);
+      //terminal.backend = pty.spawn('bash', [], {
+      //  name: 'xterm',
+      //  cols: cols,
+      //  rows: rows,
+      //  cwd: process.env.HOME,
+      //  env: process.env
+      //});
+      //terminal.frontend = new termjs.Terminal({
+      //  useStyle: true,
+      //  visualBell: true,
+      //  geometry: [cols, rows]
+      //});
+      //var frontend = terminal.frontend;
+      //var backend = terminal.backend;
+      //frontend.on('data', function(data) {
+      //  if (readonly) return;
+      //  backend.write(data);
+      //});
+      //
+      //backend.on('data', function(data) {
+      //  frontend.write(data);
+      //});
+
+      //initiate frontend
+      //frontend.open('#'+terminal_id);
+      //setTimeout(backend.write('cd '+
+      //  ctrl.config.vagrant.path+'/'+
+      //  project.path+'\r'), 1000);
+    });
+
     var terminal, term;
     var readonly = false;
     //backend
@@ -81,9 +131,9 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
 
     //initiate frontend
     terminal.open(document.getElementById('terminal'));
-    setTimeout(term.write('cd '+
-      ctrl.config.vagrant.path+'/'+
-      ctrl.config.projects.wholefoods.path+'\r'), 1000);
+    //setTimeout(term.write('cd '+
+    //  ctrl.config.vagrant.path+'/'+
+    //  ctrl.config.projects.wholefoods.path+'\r'), 1000);
   }
 
   function drudeWatch() {
