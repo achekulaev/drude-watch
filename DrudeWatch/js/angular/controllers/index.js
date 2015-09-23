@@ -4,7 +4,7 @@ angular
   .module('dw')
   .controller('IndexController', IndexController);
 
-function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages, $tray) {
+function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages, $tray, $terminal) {
   var ctrl = this;
   ctrl.projectChooser = document.querySelector('#fileDialog');
   initConfig();
@@ -57,10 +57,10 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     ctrl.terminals = {};
   }
 
-  function initTerminal() {
+  function initTerminal() { //TODO need to init terminals for added projects
     var tabContent = document.querySelector('#tabContent'),
         terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"></div>',
-        cols = 115,
+        cols = 120,
         rows = 43;
 
     angular.forEach(ctrl.config.projects, function(project) {
@@ -74,40 +74,12 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
 
       //Create terminals
       if (!isEmpty(ctrl.terminals[project.name])) {
-        console.warn('Terminal for '+project.name+' already exists');
+        console.warn('Terminal for ' + project.name + ' already exists');
+        return;
       }
-      ctrl.terminals[project.name] = {};
-      var terminal = ctrl.terminals[project.name];
-      terminal.readonly = false;
 
-      terminal.backend = pty.spawn('bash', [], {
-        name: 'xterm',
-        cols: cols,
-        rows: rows,
-        cwd: process.env.HOME,
-        env: process.env
-      });
-      terminal.frontend = new termjs.Terminal({
-        useStyle: true,
-        visualBell: true,
-        geometry: [cols, rows]
-      });
-      var frontend = terminal.frontend;
-      var backend = terminal.backend;
-      frontend.on('data', function(data) {
-        if (terminal.readonly) return;
-        backend.write(data);
-      });
-
-      backend.on('data', function(data) {
-        frontend.write(data);
-      });
-
-      //initiate frontend
-      frontend.open(document.getElementById(terminal_id));
-      setTimeout(backend.write('cd '+
-        ctrl.config.vagrant.path+'/'+
-        project.path+'\r'), 1000);
+      var startupCommand = 'cd '+ ctrl.config.vagrant.path + '/' + project.path;
+      ctrl.terminals[project.name] = $terminal.get(terminal_id, cols, rows, startupCommand);
     });
   }
 

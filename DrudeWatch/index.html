@@ -23,6 +23,7 @@
   <script src="js/angular/services/docker.js"></script>
   <script src="js/angular/services/yaml.js"></script>
   <script src="js/angular/services/drude.js"></script>
+  <script src="js/angular/services/terminal.js"></script>
   <script src="js/angular/services/tray.js"></script>
   <!-- scripts -->
   <script src="js/String.prototype.js"></script> <!-- printf -->
@@ -41,7 +42,7 @@
 
     <div ng-controller="MessagesController as messages">
       <div ng-repeat="(index, message) in messages.list">
-        <div ng-include src="'message.html'">123</div>
+        <div ng-include src="'message.html'"></div>
       </div>
     </div>
     <div class="row">
