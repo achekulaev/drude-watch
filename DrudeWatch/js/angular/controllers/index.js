@@ -4,13 +4,14 @@ angular
   .module('dw')
   .controller('IndexController', IndexController);
 
-function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages) {
+function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages, $tray) {
   var ctrl = this;
   ctrl.projectChooser = document.querySelector('#fileDialog');
   initConfig();
   initChooser();
   initTerminal();
   drudeWatch();
+  $tray.getMenu();
   $interval(drudeWatch, 10000);
 
   //------------------
@@ -145,13 +146,14 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       });
 
       if (containers.length !== 0) {
-        //TODO; iterate through leftover containers. Make fake wrappers to display them under 'Unknown'
+        //TODO; iterate through leftover containers. Make fake wrappers to display them under 'Unknown' INTO SESSION!!
         //angular.merge(ctrl.config.projects, {
         //  name: 'Unknown project',
         //    path: 'unknown',
         //    containers: containers
         //});
       }
+      $tray.getMenu(config.projects);
       $scope.$apply();
     });
 
