@@ -12,7 +12,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   initTerminal();
   drudeWatch();
   $tray.getMenu();
-  $interval(drudeWatch, 10000);
+  $interval(drudeWatch, 1000);
 
   //------------------
 
