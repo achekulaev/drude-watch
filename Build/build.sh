@@ -1,6 +1,9 @@
 #!/bin/bash
 
+appname="DrudeWatch"
 appfolder="../DrudeWatch"
+
+nwjs="/Applications/nwjs.app"
 
 # Console colors
 red='\033[0;31m'
@@ -23,21 +26,32 @@ if_failed ()
 
 #-------- Build  ---------
 
-echo-green "Copying nwjs"
-nwapp="/Applications/nwjs.app"
-if [ ! -d $nwapp ]; then
-	echo-red "$nwapp was not found"
+appresult="$appname.app"
+contents="./$appresult/Contents"
+resources="$contents/Resources"
+
+echo-green "Cleanup"
+rm -r ./*.app 
+
+echo-green "Copying nwjs.app"
+if [ ! -d $nwjs ]; then
+	echo-red "$nwjs was not found"
 fi
-cp -r $nwapp .
+cp -R "$nwjs" "$appresult"
 
-echo-green "Moving app in place"
-content="./nwjs.app/Contents"
-res="$content/Resources"
-cp -R $appfolder $res
-mv "$res/$(basename $appfolder)" "$res/app.nw"
+echo-green "Bundling $appname"
+cp -R "$appfolder" "$resources/app.nw"
 
-echo-green "Moving Info.plist"
-cp "../Resources/Info.plist" "$content"
+echo-green "Bundling Info.plist"
+cp "../Resources/Info.plist" "$contents"
 
-echo-green "Moving nw.icns"
-cp "../Resources/nw.icns" "$content"
+echo-green "Bundling nw.icns"
+cp "../Resources/nw.icns" "$resources"
+
+echo-green "Clearing icons cache"
+touch "./$appname.app"
+touch "./$appname.app/Contents/Info.plist"
+
+echo-green "Running..."
+sleep 1
+"$appname.app/Contents/MacOS/nwjs" 2>/dev/null 1>/dev/null &
