@@ -46,8 +46,6 @@ win.on('close', function(event) {
 });
 
 window.onkeypress = function KeyPress(e) {
-  console.log(e);
-
  if (e.keyCode == 94 && e.metaKey && e.altKey) { // Cmd-Alt-i
    win.showDevTools();
  }

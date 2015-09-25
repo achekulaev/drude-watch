@@ -26,8 +26,17 @@
 .-block {
   display: block; }
 
+.-inline-block {
+  display: inline-block; }
+
 .green {
-  color: green; }
+  color: #00d544; }
+
+.orange {
+  color: #ffbf00; }
+
+.red {
+  color: #ff4442; }
 
 #terminal {
   margin-left: 1px; }
@@ -45,6 +54,9 @@ html, body {
   font-size: 12px; }
 
 /* -- Left menu -- */
+nav.navbar {
+  border: 0; }
+
 .navbar-collapse {
   height: auto;
   border-top: 0;
@@ -81,27 +93,37 @@ html, body {
   margin-right: 0; }
 
 .left-menu {
-  padding-right: 0; }
+  height: 100vh;
+  padding-right: 0;
+  background-color: #f8f8f8;
+  border: 1px solid #e7e7e7; }
 
 .right-content {
   padding-left: 0; }
 
-/* -- Spinner -- */
-.glyphicon.spinning {
-  -webkit-animation: spin2 1.5s infinite linear; }
+.docker {
+  padding: 5px 0 5px 10px;
+  border-bottom: 1px solid #e7e7e7;
+  margin-bottom: 5px; }
 
-@keyframes spin {
-  from {
-    transform: scale(1) rotate(0deg); }
-  to {
-    transform: scale(1) rotate(360deg); } }
-@-webkit-keyframes spin2 {
-  from {
-    -webkit-transform: rotate(0deg); }
-  to {
-    -webkit-transform: rotate(360deg); } }
-.spinning {
-  -webkit-font-smoothing: subpixel-antialiased;
-  /* looks better */ }
+.project {
+  padding-left: 10px; }
+
+.project:hover {
+  outline: dotted thin; }
+
+.docker-container {
+  padding-left: 20px; }
+
+.gear {
+  position: fixed;
+  left: 10px;
+  bottom: 10px; }
+
+div#home.tab-pane {
+  height: 100vh;
+  text-align: center;
+  line-height: 100vh;
+  font-family: Menlo; }
 
 /*# sourceMappingURL=app.css.map */

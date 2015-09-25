@@ -18,6 +18,10 @@ html, body {
 
 /* -- Left menu -- */
 
+nav.navbar {
+  border: 0;
+}
+
 .navbar-collapse {
   height: auto;
   border-top: 0;
@@ -56,29 +60,43 @@ html, body {
 }
 
 .left-menu {
+  height: 100vh;
   padding-right: 0;
+  background-color: #f8f8f8;
+  border: 1px solid #e7e7e7;
 }
 
 .right-content {
   padding-left: 0;
 }
 
-/* -- Spinner -- */
-
-.glyphicon.spinning {
-  -webkit-animation: spin2 1.5s infinite linear;
+.docker {
+  padding: 5px 0 5px 10px;
+  border-bottom: 1px solid #e7e7e7;
+  margin-bottom: 5px;
 }
 
-@keyframes spin {
-  from { transform: scale(1) rotate(0deg);}
-  to { transform: scale(1) rotate(360deg);}
+.project {
+  padding-left: 10px
 }
 
-@-webkit-keyframes spin2 {
-  from { -webkit-transform: rotate(0deg);}
-  to { -webkit-transform: rotate(360deg);}
+.project:hover {
+  outline: dotted thin;
 }
 
-.spinning {
-  -webkit-font-smoothing: subpixel-antialiased; /* looks better */
+.docker-container {
+  padding-left: 20px;
+}
+
+.gear {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+}
+
+div#home.tab-pane {
+  height: 100vh;
+  text-align: center;
+  line-height: 100vh;
+  font-family: Menlo;
 }

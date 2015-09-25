@@ -33,12 +33,22 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     ctrl.terminals[projectLabel].exec(command);
   };
 
-  this.startProject = function(projectLabel) {
-    this.command(projectLabel, 'dsh up');
+  this.startProject = function(project) {
+    project.status = 10;
+    this.command(project.label, 'dsh up');
   };
 
-  this.stopProject = function(projectLabel) {
-    this.command(projectLabel, 'dsh down');
+  this.stopProject = function(project) {
+    project.status = 10;
+    this.command(project.label, 'dsh stop');
+  };
+
+  this.startExclusively = function(project) {
+    this.command(project.label, 'dsh stop --all && dsh up');
+  };
+
+  this.showConsole = function() {
+    win.showDevTools();
   };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
@@ -129,6 +139,13 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
         p.label = p.path.replace(/[^\w]/, ''); //TODO refactor this!!
         var p_containers = $yaml.parseYml('{0}/{1}/docker-compose.yml'.format(config.vagrant.path, p.path));
         p.containers = matchContainers(p.path, p_containers, containers);
+        var hasRunning = 0,
+            hasStopped = 0;
+        angular.forEach(p.containers, function(container){
+          if (container.$instance) hasRunning = 1;
+          if (!container.$instance) hasStopped = 2;
+        });
+        p.status = hasRunning + hasStopped;
       });
 
       if (containers.length !== 0) {
