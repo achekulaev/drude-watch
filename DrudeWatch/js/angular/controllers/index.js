@@ -72,7 +72,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
         }
       }
     });
-    console.log(ctrl.config);
+
     // Session config
     ctrl.session = $sessionStorage.$default({
       vagrant: {

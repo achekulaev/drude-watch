@@ -34,7 +34,7 @@ function $tray($rootScope) {
     var projectsMenu = getProjectsMenu(projects);
 
     if (!projectsMenu.list.equals(projectsList)) {
-      console.log('rebuilding menu');
+      //console.log('rebuilding menu');
       projectsList = projectsMenu.list;
       menu.clear(); //TODO refactor to delete only projects
       menu.compile(menuHeader.concat(projectsMenu.menu, menuFooter));
