@@ -1,6 +1,6 @@
 #!/bin/bash
 
-appname="DrudeWatch"
+appname="Drude Watch"
 appfolder="../DrudeWatch"
 
 nwjs="/Applications/nwjs.app"

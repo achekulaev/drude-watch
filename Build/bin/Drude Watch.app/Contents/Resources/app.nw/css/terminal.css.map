@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,SAAU;EACR,WAAW,EAAE,GAAG;EAChB,mBAAU;IACR,WAAW,EAAE,MAAM;IACnB,SAAS,EAAE,IAAI",
+"sources": ["terminal.scss"],
+"names": [],
+"file": "terminal.css"
+}

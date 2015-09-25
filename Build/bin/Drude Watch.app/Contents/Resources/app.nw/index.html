@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="dw">
+<head>
+  <meta charset="UTF-8">
+  <!-- css -->
+  <link type="text/css" rel="stylesheet" href="js/libs/bootstrap/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+  <link type="text/css" rel="stylesheet" href="css/app.css" />
+  <!-- libs -->
+  <script src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+  <script src="js/libs/bootstrap/js/bootstrap.js"></script>
+  <!-- angular -->
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-route/angular-route.min.js"></script>
+  <script src="bower_components/angular-aria/angular-aria.min.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+  <script src="js/angular/app.js"></script>
+  <script src="js/angular/controllers/index.js"></script>
+  <script src="js/angular/controllers/messages.js"></script>
+  <script src="js/angular/services/messages.js"></script>
+  <script src="js/angular/services/vbox.js"></script>
+  <script src="js/angular/services/vagrant.js"></script>
+  <script src="js/angular/services/docker.js"></script>
+  <script src="js/angular/services/yaml.js"></script>
+  <script src="js/angular/services/drude.js"></script>
+  <script src="js/angular/services/terminal.js"></script>
+  <script src="js/angular/services/tray.js"></script>
+  <!-- scripts -->
+  <script src="js/String.prototype.js"></script> <!-- printf -->
+  <script src="js/Array.prototype.js"></script>
+  <script src="js/node-init.js"></script>  <!-- initialize nw.js application with default goodies -->
+  <!-- title -->
+  <title>Drude Watch</title>
+</head>
+<body>
+
+  <script type="text/ng-template" id="message.html">
+    <div class="alert alert-{{message.type}}">{{message.text}}<button ng-click="messages.release(index)">X</button></div>
+  </script>
+
+  <div ng-controller="IndexController as app">
+    <input style="display:none;" id="fileDialog" type="file" nwdirectory nwworkingdir="{{app.config.vagrant.path}}" accept=".yml" />
+
+    <div ng-controller="MessagesController as messages">
+      <div ng-repeat="(index, message) in messages.list">
+        <div ng-include src="'message.html'"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2 left-menu">
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+              <!-- Docker status -->
+              <li class="active docker">
+                <i ng-if="app.session.vagrant.vm.running" class="fa fa-check-circle green"></i>
+                <i ng-if="!app.session.vagrant.vm.running" class="fa fa-circle red"></i>
+                Docker
+              </li>
+              <!-- Projects -->
+              <li ng-repeat="project in app.config.projects" data-label="{{project.label}}" class="project">
+                <div ng-click="app.tabActivate(project.label)" role="tab" class="-pointer project">
+                  <i ng-if="project.status==1" class="fa fa-circle green"></i>
+                  <i ng-if="project.status==2" class="fa fa-circle-thin"></i>
+                  <i ng-if="project.status==3" class="fa fa-warning orange"></i>
+                  <i ng-if="project.status==10" class="fa fa-spinner fa-spin"></i>
+                  <label class="-pointer">{{project.name}}</label>
+                  <div class="dropdown project-dropdown">
+                    <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
+                      <li><a href="#" ng-click="app.startProject(project)">Start</a></li>
+                      <li><a href="#" ng-click="app.startExclusively(project)">Start exclusively</a></li>
+                      <li><a href="#" ng-click="app.stopProject(project)">Stop</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- Containers -->
+                <div ng-repeat="(name, data) in project.containers" class="docker-container">
+                  <i ng-if="data.$instance" class="fa fa-circle green"></i>
+                  <i ng-if="!data.$instance" class="fa fa-circle-thin"></i>
+                  {{name}}
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <i ng-click="app.addProject()" class="fa fa-plus-circle fa-3x -pointer -block green"
+           data-toggle="tooltip" data-placement="bottom" title="Watch new Drude project" style="text-align: center"></i>
+        <!-- Gear menu -->
+        <div class="dropup gear">
+          <i class="fa fa-gear -pointer" style="opacity: 0.7"
+             id="gearMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></i>
+          <ul class="dropdown-menu" aria-labelledby="gearMenu">
+            <li><a href="#" ng-click="app.showConsole()">Console</a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- Right content -->
+      <div class="col-md-10 right-content">
+        <div class="tab-content" id="tabContent">
+          <div role="tabpanel" class="tab-pane active unselectable" id="home">Welcome to Drude Watch, commander_</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

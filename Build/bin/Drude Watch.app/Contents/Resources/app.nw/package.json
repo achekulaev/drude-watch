@@ -1,0 +1,21 @@
+{
+  "name": "Drude Watch",
+  "main": "index.html",
+  "description": "Description",
+  "version": "0.0.1",
+  "window": {
+    "title": "Drude Watch",
+    "icon": "nw.icns",
+    "toolbar": false,
+    "frame": true,
+    "width": 1200,
+    "height": 600,
+    "position": "mouse",
+    "min_width": 1200,
+    "min_height": 800,
+    "max_width": 1200,
+    "max_height": 800,
+    "single-instance": true,
+    "show": false
+  }
+}
