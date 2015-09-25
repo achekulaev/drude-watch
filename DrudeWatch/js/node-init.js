@@ -13,7 +13,7 @@ var gui = require('nw.gui')
 var mb = new gui.Menu({ type : "menubar" });
 
 //-- Initiate default Mac OS menu
-mb.createMacBuiltin("AppName");
+mb.createMacBuiltin("Drude Watch");
 win.menu = mb;
 win.focus();
 
