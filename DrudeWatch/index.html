@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <!-- css -->
   <link type="text/css" rel="stylesheet" href="js/libs/bootstrap/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
   <link type="text/css" rel="stylesheet" href="css/app.css" />
   <!-- libs -->
   <script src="js/libs/jquery/jquery-2.1.4.min.js"></script>
@@ -46,23 +47,35 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-2">
-        <!-- Docker status -->
-        <div>
-          Docker - {{app.session.vagrant.vm.running ? 'running' : 'not running'}}
-        </div>
-
-        <!-- Projects -->
-        <div ng-repeat="project in app.config.projects">
-          <a href="#{{project.label}}" ng-click="app.tabActivate(project.label)" role="tab">{{project.name}}</a>
-          <div ng-repeat="(name, data) in project.containers">
-            {{name}} - ({{data.$instance ? 'running' : 'stopped'}})
+      <div class="col-md-2 left-menu">
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+              <!-- Docker status -->
+              <li class="active">
+                Docker
+                <span class="glyphicon glyphicon-ok-sign green" ng-if="app.session.vagrant.vm.running"></span>
+                <i class="fa fa-frown-o" ng-if="!app.session.vagrant.vm.running"></i>
+              </li>
+              <!--<li class="active"><a href="#">Link</a></li>-->
+              <!-- Projects -->
+              <li data-label="{{project.label}}" ng-repeat="project in app.config.projects">
+                <a href="#{{project.label}}" ng-click="app.tabActivate(project.label)" role="tab">{{project.name}}
+                <button ng-click="app.startProject(project.label)">-></button>
+                <button ng-click="app.stopProject(project.label)">X</button></a>
+                <div ng-repeat="(name, data) in project.containers">
+                  <span class="glyphicon glyphicon-ok-sign green" ng-if="data.$instance"></span>
+                  <i class="fa fa-circle-thin" ng-if="!data.$instance"></i>
+                  {{name}}
+                </div>
+              </li>
+            </ul>
           </div>
-        </div>
+        </nav>
 
         <button class="btn btn-default" ng-click="app.addProject()">Add project</button>
       </div>
-      <div class="col-md-10">
+      <div class="col-md-10 right-content">
         <div class="tab-content" id="tabContent">
           <div role="tabpanel" class="tab-pane active" id="home">Welcome to Drude Watch, commander.</div>
         </div>

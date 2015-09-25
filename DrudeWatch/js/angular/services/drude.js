@@ -21,6 +21,8 @@ function $drude () {
         callback(null, {
           name: basename,
           path: basename,
+          label: basename.replace(/[^\w]/, ''),
+          status: null,
           containers: {}
         });
       });

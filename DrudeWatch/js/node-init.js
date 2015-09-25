@@ -36,6 +36,23 @@ $(window).on('load', function() {
   win.focus();
 });
 
+/** Handle Cmd-Q as quit and Close button as hide **/
+win.on('close', function(event) {
+  if (event == 'quit') { //Cmd-q pressed
+    gui.App.quit();
+  } else {
+    this.hide();
+  }
+});
+
+window.onkeypress = function KeyPress(e) {
+  console.log(e);
+
+ if (e.keyCode == 94 && e.metaKey && e.altKey) { // Cmd-Alt-i
+   win.showDevTools();
+ }
+};
+
 /**
  * Checks if value is empty. Deep-checks arrays and objects
  * Note: isEmpty([]) == true, isEmpty({}) == true, isEmpty([{0:false},"",0]) == true, isEmpty({0:1}) == false

@@ -38,10 +38,15 @@
       backend.on('data', function(data) {
         frontend.write(data);
       });
+      // bind exec to id
+      terminals[element_id].exec = function(command) {
+        exec(element_id, command);
+      };
 
       //initiate frontend
       frontend.open(document.getElementById(element_id));
       setTimeout(backend.write(startupCommand + '\r'), 1000);
+      return terminals[element_id];
     }
 
     function exec(id, command) {

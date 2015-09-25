@@ -21,9 +21,24 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   };
 
   this.tabActivate = function(id) {
-    jQuery('#tabContent').find('div[role=tabpanel]').removeClass('active');
-    jQuery('#tabContent').find('div#'+id+'-terminal').addClass('active');
-    jQuery('#tabContent').find('div#'+id+'-terminal').find('div.terminal').focus();
+    // id == project.path
+    var tabContent = jQuery('#tabContent');
+    tabContent.find('div[role=tabpanel]').removeClass('active');
+    tabContent.find('div#'+id+'-terminal').addClass('active').find('div.terminal').focus();
+    jQuery('li[data-label]').removeClass('active');
+    jQuery('li[data-label="' + id + '"]').addClass('active');
+  };
+
+  this.command = function(projectLabel, command) {
+    ctrl.terminals[projectLabel].exec(command);
+  };
+
+  this.startProject = function(projectLabel) {
+    this.command(projectLabel, 'dsh up');
+  };
+
+  this.stopProject = function(projectLabel) {
+    this.command(projectLabel, 'dsh down');
   };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
@@ -47,6 +62,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
         }
       }
     });
+    console.log(ctrl.config);
     // Session config
     ctrl.session = $sessionStorage.$default({
       vagrant: {
@@ -60,16 +76,14 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   function initTerminal() { //TODO need to init terminals for added projects
     var tabContent = document.querySelector('#tabContent'),
         terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"></div>',
-        cols = 120,
-        rows = 43;
+        cols = 140,
+        rows = 35;
 
     angular.forEach(ctrl.config.projects, function(project) {
       // Create div holders for terminals
-      var project_label = project.path.replace(/[^\w]/, ''),
-          terminal_id = '{0}-terminal'.format(project_label);
-      if (!document.getElementById(terminal_id)) {
-        jQuery(terminalHTML.format(terminal_id))
-          .appendTo(tabContent);
+      var terminal_id = project.label + '-terminal';
+      if (!jQuery(terminal_id).length) {
+        jQuery(terminalHTML.format(terminal_id)).appendTo(tabContent);
       }
 
       //Create terminals
@@ -79,7 +93,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       }
 
       var startupCommand = 'cd '+ ctrl.config.vagrant.path + '/' + project.path;
-      ctrl.terminals[project.name] = $terminal.get(terminal_id, cols, rows, startupCommand);
+      ctrl.terminals[project.label] = $terminal.get(terminal_id, cols, rows, startupCommand);
     });
   }
 
@@ -196,6 +210,10 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
 
     }, false);
   }
+
+  $scope.$on('tabActivate', function(e, tabId) {
+    ctrl.tabActivate(tabId);
+  });
 
 }
 

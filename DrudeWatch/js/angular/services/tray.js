@@ -4,7 +4,7 @@
   .module('dw')
   .factory('$tray', $tray);
 
-function $tray() {
+function $tray($rootScope) {
   var tray = new gui.Tray({ icon: 'img/icon.png' });
   var menu = new gui.Menu();
       menu.clear = clear;
@@ -48,17 +48,19 @@ function $tray() {
    * @returns {{list: Array, menu: Array}} list to compare with old one as we can't compare objects
    */
   function getProjectsMenu(projects) {
-    var list = [], menu = [];
+    var list = [], // jist plain list of projects and working containers
+        menu = [];
     angular.forEach(projects, function(project) {
       list.push([project.name]);
       menu.push({
         label: project.name,
-        click: function() {}
+        click: function() { tabActivate(project.label); }
       });
       angular.forEach(project.containers, function(container, name) {
+        if (!container.$instance) return;
         list[list.length - 1].push(name);
         menu.push({
-          label: "- " + name,
+          label: "• " + name,
           click: function() {}
         });
       });
@@ -94,6 +96,12 @@ function $tray() {
       }
     }
   }
+
+  function tabActivate(id) {
+    $rootScope.$broadcast('tabActivate', id);
+    $rootScope.$broadcast('win.show', id);
+  }
+
 }
 
 })();
