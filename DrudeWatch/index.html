@@ -60,18 +60,18 @@
                 Docker
               </li>
               <!-- Projects -->
-              <li ng-repeat="project in app.config.projects" data-label="{{project.label}}">
+              <li ng-repeat="project in app.config.projects" data-label="{{project.label}}" class="project">
                 <div ng-click="app.tabActivate(project.label)" role="tab" class="-pointer project">
                   <i ng-if="project.status==1" class="fa fa-circle green"></i>
                   <i ng-if="project.status==2" class="fa fa-circle-thin"></i>
                   <i ng-if="project.status==3" class="fa fa-warning orange"></i>
                   <i ng-if="project.status==10" class="fa fa-spinner fa-spin"></i>
-                  {{project.name}}
-                  <div class="dropdown -inline-block">
+                  <label class="-pointer">{{project.name}}</label>
+                  <div class="dropdown project-dropdown">
                     <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
                       <li><a href="#" ng-click="app.startProject(project)">Start</a></li>
                       <li><a href="#" ng-click="app.startExclusively(project)">Start exclusively</a></li>
                       <li><a href="#" ng-click="app.stopProject(project)">Stop</a></li>

@@ -104,13 +104,25 @@ nav.navbar {
 .docker {
   padding: 5px 0 5px 10px;
   border-bottom: 1px solid #e7e7e7;
-  margin-bottom: 5px; }
+  margin-bottom: 3px; }
 
-.project {
-  padding-left: 10px; }
+li.project {
+  margin-bottom: 3px; }
 
-.project:hover {
-  outline: dotted thin; }
+li.active .project {
+  background: rgba(0, 0, 255, 0.25); }
+
+div.project {
+  padding: 3px 0 3px 10px; }
+
+div.project label {
+  margin: 0; }
+
+.project-dropdown {
+  display: inline-block;
+  float: right;
+  margin-right: 10px;
+  margin-top: -1px; }
 
 .docker-container {
   padding-left: 20px; }
