@@ -8,7 +8,8 @@ var gui = require('nw.gui')
   , express = require('express')
   , virtualbox = require('virtualbox') // https://github.com/Node-Virtualization/node-virtualbox
   , DockerClient = require('dockerode') // https://github.com/apocas/dockerode
-  , yaml = require('js-yaml');
+  , yaml = require('js-yaml')
+  , exec = require('child_process').exec;
 
 var mb = new gui.Menu({ type : "menubar" });
 

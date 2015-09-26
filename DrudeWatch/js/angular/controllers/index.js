@@ -23,6 +23,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   this.tabActivate = function(id) {
     // id == project.path
     var tabContent = jQuery('#tabContent');
+    if (tabContent.find('div#'+id+'-terminal.active').length) { return; }
     tabContent.find('div[role=tabpanel]').removeClass('active');
     tabContent.find('div#'+id+'-terminal').addClass('active').find('div.terminal').focus();
     jQuery('li[data-label]').removeClass('active');
@@ -52,42 +53,45 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
-    //$localStorage.$reset();
+    $localStorage.$reset();
     // Persistent config
     ctrl.config = $localStorage.$default({
       vagrant: {
-        path: '/Users/alexei.chekulaev/Sites'
+        //path: '/Users/alexei.chekulaev/Sites'
+        path: ''
       },
       docker: {
         host: 'http://127.0.0.1',
         port: 2375,
         timeout: 1000 //ms
-        //socketPath: '/var/run/docker.sock'
+        //socket: '/var/run/docker.sock'
       },
       projects: {
-        wholefoods: {
-          name: 'wholefoods',
-          path: 'wholefoods',
-          containers: {}
-        }
+        //wholefoods: {
+        //  name: 'wholefoods',
+        //  path: 'wholefoods',
+        //  containers: {}
+        //}
       }
     });
 
     // Session config
     ctrl.session = $sessionStorage.$default({
       vagrant: {
-        vm : { id: '', name: 'Loading...', running: false }
+        vm : { id: '', name: 'Loading...', running: false },
+        error: ''
       },
+      docker: { error: '' },
       terminals: {}
     });
     ctrl.terminals = {};
   }
 
   function initTerminal() { //TODO need to init terminals for added projects
-    var tabContent = document.querySelector('#tabContent'),
+    var tabContent = jQuery('#tabContent'),
         terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"></div>',
-        cols = 140,
-        rows = 35;
+        cols = Math.floor((tabContent.width()/7.8)), //for 13px font
+        rows = Math.floor((tabContent.height()/18));
 
     angular.forEach(ctrl.config.projects, function(project) {
       // Create div holders for terminals
@@ -108,26 +112,37 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   }
 
   function drudeWatch() {
+    if (!ctrl.config.vagrant.path) return;
+
     $vagrant.getVboxId(ctrl.config.vagrant.path, function (err, id) {
+      var vagrant = ctrl.session.vagrant;
+      vagrant.error = '';
+      vagrant.errorData = '';
       if (err) {
-        console.error('Could not get Vagrant VM id.');
-        console.error(err);
+        vagrant.error = 'Could not get Vagrant VM id.';
+        vagrant.errorData = err;
       }
 
       $vbox.info(id, function(err, machine) {
         if (err) {
-          console.error('Could not get info for Vbox: ' + id);
-          console.log(err);
+          vagrant.error = 'Could not get info for Vbox: ' + id;
+          vagrant.errorData = err;
         }
-        ctrl.session.vagrant.vm = machine;
+        vagrant.vm = machine;
         $scope.$apply();
       });
     });
 
     $docker.listContainers(ctrl.config.docker, function (err, containers) {
       if (err) {
-        console.error('Could not connect to Docker with these parameters:');
-        console.info(ctrl.config.docker);
+        ctrl.session.docker.error = 'Could not connect to Docker with these parameters: ';
+        var params = '';
+        if (ctrl.config.docker.socket) {
+          params = ctrl.config.docker.socket;
+        } else {
+          params = ctrl.config.docker.host + ':' + ctrl.config.docker.port;
+        }
+        ctrl.session.docker.error += params;
         $scope.$apply();
         return;
       }
@@ -227,6 +242,24 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
 
     }, false);
   }
+
+  this.debug = function() {
+
+  };
+
+  this.killForegroundProcess = function(projectLabel) {
+    var $pid = ctrl.terminals[projectLabel].backend.pid;
+
+    var pgrep = 'pgrep -P {0}';
+    exec(pgrep.format($pid), function(err, stdout, stderr) {
+      stdout = stdout.replace(/[^\d\|\\]/, '');
+      if (!isEmpty(stdout)) {
+        // explain: kills process that matches formatted for grep results from pgrep, excludes grep, foreground only (S+)
+        var kill = 'kill -9 $(ps x | grep -e "$(pgrep -P {0} | xargs | sed "s/ /\\\\|/")" | grep -v grep | grep S+ | cut -d " " -f 1)';
+        exec(kill.format($pid));
+      }
+    });
+  };
 
   $scope.$on('tabActivate', function(e, tabId) {
     ctrl.tabActivate(tabId);

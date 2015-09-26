@@ -18,6 +18,7 @@
   <script src="js/angular/app.js"></script>
   <script src="js/angular/controllers/index.js"></script>
   <script src="js/angular/controllers/messages.js"></script>
+  <script src="js/angular/controllers/vagrant.js"></script>
   <script src="js/angular/services/messages.js"></script>
   <script src="js/angular/services/vbox.js"></script>
   <script src="js/angular/services/vagrant.js"></script>
@@ -35,16 +36,22 @@
 </head>
 <body>
 
-  <script type="text/ng-template" id="message.html">
-    <div class="alert alert-{{message.type}}">{{message.text}}<button ng-click="messages.release(index)">X</button></div>
-  </script>
-
   <div ng-controller="IndexController as app">
     <input style="display:none;" id="fileDialog" type="file" nwdirectory nwworkingdir="{{app.config.vagrant.path}}" accept=".yml" />
 
+    <div ng-controller="VagrantController as vagrant" ng-if="!app.config.vagrant.path || app.session.vagrant.error"
+      style="background: white; position: absolute; top: 0; left: 0; z-index: 10; width:100vw; height:100vh;">
+        Greetings, lieutenant!
+        <div ng-if="!app.config.vagrant.path">Path to Vagrant files is not set.</div>
+        <div ng-if="!app.config.vagrant.error">{{app.config.vagrant.error}}</div>
+        <input style="display: none;" id="vagrantPathChooser" type="file" nwdirectory />
+        <button class="btn btn-info" onclick="jQuery('#vagrantPathChooser').click()">Set path to Vagrantfile</button>
+        <div ng-if="vagrant.error">{{vagrant.error}}</div>
+    </div>
+
     <div ng-controller="MessagesController as messages">
       <div ng-repeat="(index, message) in messages.list">
-        <div ng-include src="'message.html'"></div>
+        <div ng-include src="'js/angular/templates/message.html'"></div>
       </div>
     </div>
 
@@ -89,9 +96,11 @@
           </div>
         </nav>
 
+        <!-- Add project button -->
         <i ng-click="app.addProject()" class="fa fa-plus-circle fa-3x -pointer -block green"
            data-toggle="tooltip" data-placement="bottom" title="Watch new Drude project" style="text-align: center"></i>
-        <!-- Gear menu -->
+
+        <!-- Bottom-left gear menu -->
         <div class="dropup gear">
           <i class="fa fa-gear -pointer" style="opacity: 0.7"
              id="gearMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></i>
@@ -99,6 +108,8 @@
             <li><a href="#" ng-click="app.showConsole()">Console</a></li>
           </ul>
         </div>
+        <!-- -->
+        <button ng-click="app.debug()">Debug</button>
       </div>
       <!-- Right content -->
       <div class="col-md-10 right-content">

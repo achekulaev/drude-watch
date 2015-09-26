@@ -13,7 +13,9 @@ html, body {
 }
 
 .terminal {
-  font-size: 12px;
+  font-size: 13px;
+  float: none !important; /* flickers with float for some reason */
+  display: inline-block;
 }
 
 /* -- Left menu -- */
