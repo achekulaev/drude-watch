@@ -99,7 +99,7 @@ function $tray($rootScope) {
 
   function tabActivate(id) {
     $rootScope.$broadcast('tabActivate', id);
-    $rootScope.$broadcast('win.show', id);
+    win.restoreFromTray();
   }
 
 }

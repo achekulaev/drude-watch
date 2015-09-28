@@ -56,9 +56,10 @@
         //var $PS1 = '\\t \\033[01;34m\\]\\$PWD \\[\\033[00m\\]$ ';
         //backend.write('PS1="' + $PS1 + '"\r');
 
+        backend.write('export PATH=/usr/local/bin:$PATH\r');
         backend.write(startupCommand + ' && reset\r')
       }, 1000);
-console.log(frontend);
+
       ////handle resize
       //function fitIn() { //it doesn't work very well though
       //  frontend.resize(jQuery('#'+element_id).parent().width(), jQuery(window).height());

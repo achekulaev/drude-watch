@@ -7,6 +7,7 @@ angular
 function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages, $tray, $terminal) {
   var ctrl = this;
   ctrl.projectChooser = document.querySelector('#fileDialog');
+  ctrl.initConfig = initConfig;
   initConfig();
   initChooser();
   initTerminal();
@@ -22,11 +23,11 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   };
 
   this.tabActivate = function(id) {
-    // id == project.path
+    // id == project.label
     var tabContent = jQuery('#tabContent');
-    if (tabContent.find('div#'+id+'-terminal.active').length) { return; }
+    if (tabContent.find('div#'+id+'.active').length) { return; } // if tab already active
     tabContent.find('div[role=tabpanel]').removeClass('active');
-    tabContent.find('div#'+id+'-terminal').addClass('active').find('div.terminal').focus();
+    tabContent.find('div#'+id).addClass('active').find('div.terminal').focus();
     jQuery('li[data-label]').removeClass('active');
     jQuery('li[data-label="' + id + '"]').addClass('active');
   };
@@ -53,8 +54,13 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     win.showDevTools();
   };
 
-  function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
+  this.resetSettings = function() {
     $localStorage.$reset();
+    ctrl.initConfig();
+  };
+
+  function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
+    //$localStorage.$reset();
     // Persistent config
     ctrl.config = $localStorage.$default({
       vagrant: {
@@ -88,17 +94,18 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     ctrl.terminals = {};
   }
 
-  function initTerminal() { //TODO need to init terminals for added projects
+  function initTerminal(projectLabel) { //TODO need to init terminals for added projects
     var tabContent = jQuery('#tabContent'),
-        terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"></div>',
+        terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"><div id="{0}-terminal"></div></div>',
         cols = Math.floor((tabContent.width()/7.8)), //for 13px font
         rows = Math.floor((tabContent.height()/18));
 
     angular.forEach(ctrl.config.projects, function(project) {
+      if (!isEmpty(projectLabel) && project.label != projectLabel) return;
       // Create div holders for terminals
-      var terminal_id = project.label + '-terminal';
-      if (!jQuery(terminal_id).length) {
-        jQuery(terminalHTML.format(terminal_id)).appendTo(tabContent);
+      var tab_id = project.label;
+      if (!jQuery(tab_id).length) {
+        jQuery(terminalHTML.format(tab_id)).appendTo(tabContent);
       }
 
       //Create terminals
@@ -108,7 +115,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       }
 
       var startupCommand = 'cd '+ ctrl.config.vagrant.path + '/' + project.path;
-      ctrl.terminals[project.label] = $terminal.get(terminal_id, cols, rows, startupCommand);
+      ctrl.terminals[project.label] = $terminal.get(tab_id+'-terminal', cols, rows, startupCommand);
     });
   }
 
@@ -145,16 +152,18 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
         }
         ctrl.session.docker.error += params;
         $scope.$apply();
-        return;
       }
 
       // containers is an array:  [ 0: {}, 1: {} .... ]
       // parseYml returns Object: { cli: {}, web: {}, db: {} }
       var config = ctrl.config;
       angular.forEach(ctrl.config.projects, function(p) {
-        p.label = p.path.replace(/[^\w]/, ''); //TODO refactor this!!
         var p_containers = $yaml.parseYml('{0}/{1}/docker-compose.yml'.format(config.vagrant.path, p.path));
-        p.containers = matchContainers(p.path, p_containers, containers);
+        if (!isEmpty(containers)) {
+          p.containers = matchContainers(p.label, p_containers, containers);
+        } else {
+          p.containers = p_containers;
+        }
         var hasRunning = 0,
             hasStopped = 0;
         angular.forEach(p.containers, function(container){
@@ -164,7 +173,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
         p.status = hasRunning + hasStopped;
       });
 
-      if (containers.length !== 0) {
+      if (!isEmpty(containers)) {
         //TODO; iterate through leftover containers. Make fake wrappers to display them under 'Unknown' INTO SESSION!!
         //angular.merge(ctrl.config.projects, {
         //  name: 'Unknown project',
@@ -214,7 +223,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     var chooser = ctrl.projectChooser;
     chooser.addEventListener('change', function(e) {
       if (this.value == '') return;
-      $drude.validateProject(this.value,
+      $drude.validateProject(ctrl.config.vagrant.path, this.value,
         function createProject(err, project) {
           if (err) {
             $messages.error(err.msg);
@@ -235,8 +244,9 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
           }
 
           var newProject = {};
-          newProject[project.path] = project;
+          newProject[project.label] = project;
           angular.merge(ctrl.config.projects, newProject);
+          initTerminal(project.label);
           console.log(ctrl.config.projects);
         }
       );

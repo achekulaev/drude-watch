@@ -95,7 +95,7 @@ li.project {
   margin-bottom: 3px;
 }
 
-li.active .project {
+li.active .project, li.active.docker {
   background: rgba(0, 0, 255, 0.25);
 }
 
@@ -127,6 +127,10 @@ div.project:hover {
   position: fixed;
   left: 10px;
   bottom: 10px;
+}
+
+#tabContent {
+  height: 100vh;
 }
 
 div#home.tab-pane {

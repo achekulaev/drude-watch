@@ -67,9 +67,9 @@
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
               <!-- Docker status -->
-              <li class="active docker">
-                <i ng-if="app.session.vagrant.vm.running" class="fa fa-check-circle green"></i>
-                <i ng-if="!app.session.vagrant.vm.running" class="fa fa-circle red"></i>
+              <li ng-click="app.tabActivate('docker')" data-label="docker" class="docker -pointer">
+                <i ng-if="app.session.vagrant.vm.running && !app.session.vagrant.error && !app.ctrl.session.docker.error" class="fa fa-check-circle green"></i>
+                <i ng-if="!app.session.vagrant.vm.running || app.session.vagrant.error || app.ctrl.session.docker.error" class="fa fa-circle red"></i>
                 Docker
               </li>
               <!-- Projects -->
@@ -111,16 +111,26 @@
           <i class="fa fa-gear -pointer" style="opacity: 0.7"
              id="gearMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></i>
           <ul class="dropdown-menu" aria-labelledby="gearMenu">
+            <li><a href="#" ng-click="app.resetSettings()">Reset Settings</a></li>
             <li><a href="#" ng-click="app.showConsole()">Console</a></li>
           </ul>
         </div>
         <!-- -->
-        <button ng-click="app.debug()">Debug</button>
+        <!--<button ng-click="app.debug()">Debug</button>-->
       </div>
       <!-- Right content -->
       <div class="col-md-10 right-content">
         <div class="tab-content" id="tabContent">
           <div role="tabpanel" class="tab-pane active unselectable" id="home">Welcome to Drude Watch, commander_</div>
+          <div role="tabpanel" class="tab-pane unselectable" id="docker">Docker
+            <div>Virtual machine
+              <div ng-if="app.session.vagrant.vm.id">ID: {{app.session.vagrant.vm.id}}</div>
+              <div ng-if="app.session.vagrant.vm.id">Name: {{app.session.vagrant.vm.name}}</div>
+              <div>Status: {{app.session.vagrant.vm.running ? 'running' : 'stopped'}}</div>
+            </div>
+            <div ng-if="app.ctrl.session.docker.error">{{app.ctrl.session.docker.error}}</div>
+            <div ng-if="app.ctrl.session.vagrant.error">{{app.ctrl.session.vagrant.error}}</div>
+          </div>
         </div>
       </div>
     </div>

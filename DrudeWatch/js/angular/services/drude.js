@@ -9,7 +9,7 @@ function $drude () {
     validateProject: validateProject
   };
 
-  function validateProject(newPath, callback) {
+  function validateProject(vagrantPath, newPath, callback) {
     // check that newPath readable/exists
     fs.access(newPath, fs.R_OK, function(err) {
       if (err) { callback({ msg: 'Could not find or read from ' + newPath }); return; }
@@ -20,7 +20,7 @@ function $drude () {
         var basename = path.basename(newPath);
         callback(null, {
           name: basename,
-          path: basename,
+          path: path.relative(vagrantPath, newPath),
           label: basename.replace(/[^\w]/, ''),
           status: null,
           containers: {}

@@ -9,12 +9,12 @@
     "toolbar": false,
     "frame": true,
     "width": 1200,
-    "height": 600,
+    "height": 800,
     "position": "mouse",
     "min_width": 1200,
-    "min_height": 600,
-    "max_width": 10000,
-    "max_height": 10000,
+    "min_height": 800,
+    "max_width": 1200,
+    "max_height": 800,
     "single-instance": true,
     "show": false
   }
