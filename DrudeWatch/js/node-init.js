@@ -37,12 +37,23 @@ $(window).on('load', function() {
   win.focus();
 });
 
+win.hideToTray = function() {
+  this.hide();
+  this.setShowInTaskbar(false);
+};
+
+win.restoreFromTray = function() {
+  this.show();
+  this.focus();
+  this.setShowInTaskbar(true);
+};
+
 /** Handle Cmd-Q as quit and Close button as hide **/
 win.on('close', function(event) {
   if (event == 'quit') { //Cmd-q pressed
     gui.App.quit();
   } else {
-    this.hide();
+    this.hideToTray();
   }
 });
 
