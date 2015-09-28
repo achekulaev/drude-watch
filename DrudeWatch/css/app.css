@@ -160,4 +160,22 @@ div#home.tab-pane {
   line-height: 100vh;
   font-family: Menlo; }
 
+.VagrantController .well {
+  width: 100vw;
+  height: 100vh;
+  padding: 0; }
+.VagrantController .well-contents {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: large; }
+  .VagrantController .well-contents .text {
+    font-family: Menlo; }
+.VagrantController .alert {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%); }
+
 /*# sourceMappingURL=app.css.map */
