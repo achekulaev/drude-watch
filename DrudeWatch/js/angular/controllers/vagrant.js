@@ -15,7 +15,7 @@
       chooser.addEventListener('change', function(e) {
         if (this.value == '') return;
         var path = this.value;
-        if (pathsReadableSync(path) && pathsReadableSync(path + '/Vagrantfile')) {
+        if (pathsReadableSync(path) && pathsReadableSync(path + '/Vagrantfile') &&  pathsReadableSync(path + '/vagrant.yml')) {
           $scope.$parent.$parent.app.config.vagrant.path = path;
         }
       }, false);

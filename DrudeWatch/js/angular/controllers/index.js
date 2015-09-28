@@ -16,8 +16,9 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
 
   //------------------
 
-  this.addProject = function() {
+  this.addProject = function() { // see initChooser
     ctrl.projectChooser.click();
+    $messages.clear();
   };
 
   this.tabActivate = function(id) {

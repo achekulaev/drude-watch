@@ -44,6 +44,12 @@
     font-family: Monaco;
     font-size: 12px; }
 
+.messages .alert {
+  margin-bottom: 10px; }
+
+.messages .col-md-10 {
+  padding-right: 0; }
+
 body {
   background: #f5f5f5; }
 
@@ -55,6 +61,16 @@ html, body {
   float: none !important;
   /* flickers with float for some reason */
   display: inline-block; }
+
+/* --- Vagrant -- */
+.VagrantController {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  background: white; }
 
 /* -- Left menu -- */
 nav.navbar {

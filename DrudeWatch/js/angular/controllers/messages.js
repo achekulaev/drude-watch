@@ -16,8 +16,16 @@ function MessagesController ($scope) {
     ctrl.list.splice(index, 1);
   };
 
+  ctrl.releaseAll = function() {
+    ctrl.list = [];
+  };
+
   $scope.$on('app.message', function(e, type, text) {
     ctrl.add(type, text);
+  });
+
+  $scope.$on('app.message.clear', function(e) {
+    ctrl.releaseAll();
   });
 } 
 

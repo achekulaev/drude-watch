@@ -1,6 +1,7 @@
 @import "normalize.css";
 @import "generic";
 @import "terminal";
+@import "message";
 
 
 body {
@@ -16,6 +17,18 @@ html, body {
   font-size: 13px;
   float: none !important; /* flickers with float for some reason */
   display: inline-block;
+}
+
+/* --- Vagrant -- */
+
+.VagrantController {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width:100vw;
+  height:100vh;
+  background: white;
 }
 
 /* -- Left menu -- */
