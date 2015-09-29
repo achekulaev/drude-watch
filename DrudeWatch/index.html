@@ -125,27 +125,10 @@
       <!-- Right content -->
       <div class="col-md-10 right-content">
         <div class="tab-content" id="tabContent">
+          <!-- Home tab -->
           <div role="tabpanel" class="tab-pane active unselectable" id="home">Welcome to Drude Watch, commander_</div>
-          <div role="tabpanel" class="tab-pane unselectable" id="docker">
-            <div ng-if="app.ctrl.session.docker.error" class="alert alert-danger">{{app.ctrl.session.docker.error}}</div>
-            <div ng-if="app.ctrl.session.vagrant.error" class="alert alert-danger">{{app.ctrl.session.vagrant.error}}</div>
-            <table class="table">
-              <thead>
-                <tr><th colspan="2">Virtual machine</th></tr>
-              </thead>
-              <tbody>
-                <tr ng-if="app.session.vagrant.vm.id">
-                  <td>ID</td><td>{{app.session.vagrant.vm.id}}</td>
-                </tr>
-                <tr ng-if="app.session.vagrant.vm.id">
-                  <td>Name</td><td>{{app.session.vagrant.vm.name}}</td>
-                </tr>
-                <tr>
-                  <td>Status</td><td>{{app.session.vagrant.vm.running ? 'Running' : 'Stopped'}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <!-- Docker tab -->
+          <div ng-include="'js/angular/templates/tabs.docker.html'" role="tabpanel" class="tab-pane unselectable" id="docker"></div>
         </div>
       </div>
     </div>
