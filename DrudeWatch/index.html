@@ -129,6 +129,9 @@
           <div role="tabpanel" class="tab-pane active unselectable" id="home">Welcome to Drude Watch, commander_</div>
           <!-- Docker tab -->
           <div ng-include="'js/angular/templates/tabs.docker.html'" role="tabpanel" class="tab-pane unselectable" id="docker"></div>
+          <div ng-repeat="project in app.config.projects" id="{{project.label}}" role="tabpanel" class="tab-pane">
+            <div id="{{project.label}}-terminal"></div>
+          </div>
         </div>
       </div>
     </div>

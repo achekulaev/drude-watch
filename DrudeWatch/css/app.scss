@@ -19,18 +19,6 @@ html, body {
   display: inline-block;
 }
 
-/* --- Vagrant -- */
-
-.VagrantController {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width:100vw;
-  height:100vh;
-  background: white;
-}
-
 /* -- Left menu -- */
 
 nav.navbar {
@@ -57,7 +45,6 @@ nav.navbar {
 
 .navbar
 {
-  //max-width:300px;
   margin-right: 0;
   margin-left: 0;
 }
@@ -101,10 +88,9 @@ li.active .project, li.active.docker {
 
 div.project {
   padding: 3px 0 3px 10px;
-}
-
-div.project label {
-  margin: 0;
+  label {
+    margin: 0;
+  }
 }
 
 div.project:hover {
@@ -141,6 +127,14 @@ div#home.tab-pane {
 }
 
 .VagrantController {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width:100vw;
+  height:100vh;
+  background: white;
+
   .well {
     width: 100vw;
     height: 100vh;

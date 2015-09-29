@@ -53,8 +53,8 @@
       frontend.open(document.getElementById(element_id));
       setTimeout(function () {
         //setup PS1
-        //var $PS1 = '\\t \\033[01;34m\\]\\$PWD \\[\\033[00m\\]$ ';
-        //backend.write('PS1="' + $PS1 + '"\r');
+        var $PS1 = "export PS1='\\t \\[\\e[1;31m\\]\$PWD\\[\\e[0m\\] $ '";
+        backend.write($PS1 + "\r");
 
         backend.write('export PATH=/usr/local/bin:$PATH\r');
         backend.write(startupCommand + ' && reset\r')

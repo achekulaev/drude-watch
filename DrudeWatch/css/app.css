@@ -62,16 +62,6 @@ html, body {
   /* flickers with float for some reason */
   display: inline-block; }
 
-/* --- Vagrant -- */
-.VagrantController {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 100vw;
-  height: 100vh;
-  background: white; }
-
 /* -- Left menu -- */
 nav.navbar {
   border: 0; }
@@ -133,9 +123,8 @@ li.active .project, li.active.docker {
 
 div.project {
   padding: 3px 0 3px 10px; }
-
-div.project label {
-  margin: 0; }
+  div.project label {
+    margin: 0; }
 
 .project-dropdown {
   display: inline-block;
@@ -160,22 +149,30 @@ div#home.tab-pane {
   line-height: 100vh;
   font-family: Menlo; }
 
-.VagrantController .well {
+.VagrantController {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
   width: 100vw;
   height: 100vh;
-  padding: 0; }
-.VagrantController .well-contents {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: center;
-  font-size: large; }
-  .VagrantController .well-contents .text {
-    font-family: Menlo; }
-.VagrantController .alert {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%); }
+  background: white; }
+  .VagrantController .well {
+    width: 100vw;
+    height: 100vh;
+    padding: 0; }
+  .VagrantController .well-contents {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    font-size: large; }
+    .VagrantController .well-contents .text {
+      font-family: Menlo; }
+  .VagrantController .alert {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); }
 
 /*# sourceMappingURL=app.css.map */

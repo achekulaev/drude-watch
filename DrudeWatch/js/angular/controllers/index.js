@@ -4,14 +4,16 @@ angular
   .module('dw')
   .controller('IndexController', IndexController);
 
-function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages, $tray, $terminal) {
+function IndexController($scope, $interval, $timeout, $localStorage, $sessionStorage, $vbox, $vagrant, $docker, $yaml, $drude, $messages, $tray, $terminal) {
   var ctrl = this;
   ctrl.projectChooser = document.querySelector('#fileDialog');
   ctrl.initConfig = initConfig;
   initConfig();
   initChooser();
-  initTerminal();
-  drudeWatch();
+  $timeout(function() {  //wait for digest cycle to create elements first
+    initTerminal();
+    drudeWatch();
+  }, 10);
   $tray.getMenu();
   $interval(drudeWatch, 1000);
 
@@ -37,6 +39,10 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   };
 
   this.startProject = function(project) {
+    if (project.status == 1) {
+      $messages.warning(project.name + ' is already running');
+      return;
+    }
     project.status = 10;
     this.command(project.label, 'dsh up');
   };
@@ -60,16 +66,15 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   };
 
   this.aboutApp = function() {
-    //<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>             is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
-  }
+    //
+  };
 
   function initConfig() { // Uses ngStorage (https://github.com/gsklee/ngStorage)
     //$localStorage.$reset();
     // Persistent config
     ctrl.config = $localStorage.$default({
       vagrant: {
-        //path: '/Users/alexei.chekulaev/Sites'
-        path: ''
+        path: '' // path/to/Vagrantfile
       },
       docker: {
         host: 'http://127.0.0.1',
@@ -79,8 +84,9 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
       },
       projects: {
         //wholefoods: {
-        //  name: 'wholefoods',
-        //  path: 'wholefoods',
+        //  name: 'Project Name',
+        //  path: 'path/to/project1',
+        //  path: 'project1',
         //  containers: {}
         //}
       }
@@ -98,28 +104,21 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     ctrl.terminals = {};
   }
 
-  function initTerminal(projectLabel) { //TODO need to init terminals for added projects
+  function initTerminal(projectLabel) {
     var tabContent = jQuery('#tabContent'),
-        terminalHTML = '<div role="tabpanel" class="tab-pane" id="{0}"><div id="{0}-terminal"></div></div>',
         cols = Math.floor((tabContent.width()/7.8)), //for 13px font
         rows = Math.floor((tabContent.height()/18));
 
     angular.forEach(ctrl.config.projects, function(project) {
       if (!isEmpty(projectLabel) && project.label != projectLabel) return;
-      // Create div holders for terminals
-      var tab_id = project.label;
-      if (!jQuery(tab_id).length) {
-        jQuery(terminalHTML.format(tab_id)).appendTo(tabContent);
-      }
 
-      //Create terminals
       if (!isEmpty(ctrl.terminals[project.name])) {
         console.warn('Terminal for ' + project.name + ' already exists');
         return;
       }
 
       var startupCommand = 'cd '+ ctrl.config.vagrant.path + '/' + project.path;
-      ctrl.terminals[project.label] = $terminal.get(tab_id+'-terminal', cols, rows, startupCommand);
+      ctrl.terminals[project.label] = $terminal.get(project.label + '-terminal', cols, rows, startupCommand);
     });
   }
 
@@ -146,6 +145,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
     });
 
     $docker.listContainers(ctrl.config.docker, function (err, containers) {
+      ctrl.session.docker.error = '';
       if (err) {
         ctrl.session.docker.error = 'Could not connect to Docker with these parameters: ';
         var params = '';
@@ -259,7 +259,7 @@ function IndexController($scope, $interval, $localStorage, $sessionStorage, $vbo
   }
 
   this.debug = function() {
-    console.log(ctrl.config);
+    console.log(ctrl);
     ctrl.showConsole();
   };
 

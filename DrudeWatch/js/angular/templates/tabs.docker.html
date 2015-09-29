@@ -3,8 +3,8 @@
   <tr><th colspan="2">Virtual machine</th></tr>
   </thead>
   <tbody>
-  <tr ng-if="app.ctrl.session.vagrant.error" class="alert alert-danger">
-    <td>Error</td><td>{{app.ctrl.session.vagrant.error}}</td>
+  <tr ng-if="app.session.vagrant.error" class="alert alert-danger">
+    <td>Error</td><td>{{app.session.vagrant.error}}</td>
   </tr>
   <tr ng-if="app.session.vagrant.vm.id">
     <td>ID</td><td>{{app.session.vagrant.vm.id}}</td>
@@ -22,8 +22,8 @@
   <tr><th colspan="2">Docker</th></tr>
   </thead>
   <tbody>
-  <tr ng-if="app.ctrl.session.docker.error" class="alert alert-danger">
-    <td>Error</td><td>{{app.ctrl.session.docker.error}}</td>
+  <tr ng-if="app.session.vagrant.vm.running && app.session.docker.error" class="alert alert-danger">
+    <td>Error</td><td>{{app.session.docker.error}}</td>
   </tr>
   <tr ng-if="!app.config.docker.socket && app.config.docker.host">
     <td>Host</td><td>{{app.config.docker.host}}</td>
@@ -36,10 +36,10 @@
   </tr>
   <tr>
     <td>Status</td>
-    <td ng-if="app.ctrl.session.docker.error || app.ctrl.session.vagrant.error || !app.ctrl.session.vagrant.vm.running" class="alert-danger">
+    <td ng-if="app.session.docker.error || app.session.vagrant.error || !app.session.vagrant.vm.running" class="alert-danger">
       Unreachable
     </td>
-    <td ng-if="!app.ctrl.session.docker.error && !app.ctrl.session.vagrant.error && app.ctrl.session.vagrant.vm.running" class="alert-success">
+    <td ng-if="!app.session.docker.error && !app.session.vagrant.error && app.session.vagrant.vm.running" class="alert-success">
       Connected
     </td>
   </tr>

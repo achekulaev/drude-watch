@@ -41,6 +41,7 @@ cp -R "$nwjs" "$appresult"
 
 echo-green "Bundling $appname"
 cp -R "$appfolder" "$resources/app.nw"
+ sed -i "" "s/Drude Watch-dev/Drude Watch/" "$resources/app.nw/package.json"
 
 echo-green "Bundling Info.plist"
 cp "../Resources/Info.plist" "$contents"
